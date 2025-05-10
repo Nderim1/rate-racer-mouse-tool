@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Mouse, BarChart2, Settings, HelpCircle, Menu, Info, Target } from 'lucide-react';
+import { Mouse, BarChart2, Settings, HelpCircle, Menu, Info, Target, ShoppingCart } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -53,6 +53,12 @@ const menuItems = [
     path: "/guide",
     icon: Info,
     description: "Learn about mouse specifications"
+  },
+  {
+    title: "Recommended Mice",
+    path: "/recommended-mice",
+    icon: ShoppingCart,
+    description: "Curated list of mice for different needs"
   },
   {
     title: "Help & Support",
