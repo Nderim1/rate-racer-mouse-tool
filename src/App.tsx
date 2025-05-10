@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import PlaceholderPage from "./pages/PlaceholderPage";
+import ClickSpeedTest from "./pages/ClickSpeedTest";
 
 const queryClient = new QueryClient();
 
@@ -18,7 +19,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/click-speed" element={<PlaceholderPage />} />
+          <Route path="/click-speed" element={<ClickSpeedTest />} />
           <Route path="/dpi-analyzer" element={<PlaceholderPage />} />
           <Route path="/input-lag" element={<PlaceholderPage />} />
           <Route path="/sensor-test" element={<PlaceholderPage />} />
