@@ -8,6 +8,7 @@ interface MainLayoutProps {
   headerDescription: string;
   showSidebar?: boolean;
   title?: string;
+  showAds?: boolean;
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({ 
@@ -15,7 +16,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   headerTitle, 
   headerDescription, 
   showSidebar = true,
-  title
+  title,
+  showAds = false
 }) => {
 
   useEffect(() => {
@@ -45,38 +47,44 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   const AdPlaceholdersAndMainContent = (
     <>
       {/* Ad Placeholder - Top Banner */}
-      <div className="container mx-auto mb-6">
-        <div className="ad-placeholder ad-banner">
-          Ad Banner (728×90)
+      {showAds && (
+        <div className="container mx-auto mb-6">
+          <div className="ad-placeholder ad-banner">
+            Ad Banner (728×90)
+          </div>
         </div>
-      </div>
+      )}
 
       <main className="container mx-auto">
         <div className="flex flex-col lg:flex-row gap-6">
-          <div className="flex-1">
+          <div className={showAds ? "flex-1" : "w-full"}>
             {children}
           </div>
-          <div className="w-full lg:w-72">
-            <div className="mb-6 hidden lg:block">
-              <div
-                className="ad-placeholder ad-sidebar bg-gray-100 dark:bg-gray-800 rounded-lg p-4 text-center text-muted-foreground"
-                style={{ height: '600px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <span>Ad Sidebar<br />(Fixed Width: 288px)</span>
+          {showAds && (
+            <div className="w-full lg:w-72">
+              <div className="mb-6 hidden lg:block">
+                <div
+                  className="ad-placeholder ad-sidebar bg-gray-100 dark:bg-gray-800 rounded-lg p-4 text-center text-muted-foreground"
+                  style={{ height: '600px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
+                  <span>Ad Sidebar<br />(Fixed Width: 288px)</span>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </main>
 
       {/* Ad Placeholder - Bottom Banner */}
-      <div className="container mx-auto mt-6">
-        <div className="ad-placeholder ad-banner">
-          Ad Banner (728×90)
+      {showAds && (
+        <div className="container mx-auto mt-6">
+          <div className="ad-placeholder ad-banner">
+            Ad Banner (728×90)
+          </div>
         </div>
-      </div>
+      )}
       <footer className="container mx-auto pt-8 text-center text-sm text-muted-foreground mt-8">
-        <p>&copy; {new Date().getFullYear()} Mouse Tools. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} TestMyRig.com. All rights reserved.</p>
       </footer>
     </>
   );
