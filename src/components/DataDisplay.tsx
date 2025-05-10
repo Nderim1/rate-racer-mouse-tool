@@ -1,6 +1,5 @@
-
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RefreshCw, CirclePlay, CircleStop } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -11,6 +10,8 @@ interface DataDisplayProps {
   isActive: boolean;
   onReset: () => void;
   onToggle: () => void;
+  label?: string;
+  showControls?: boolean;
 }
 
 const DataDisplay = ({
@@ -19,11 +20,16 @@ const DataDisplay = ({
   max,
   isActive,
   onReset,
-  onToggle
+  onToggle,
+  label,
+  showControls = true
 }: DataDisplayProps) => {
   return (
     <Card className="bg-card/50 backdrop-blur-sm">
-      <CardContent className="p-4">
+      <CardHeader>
+        {label && <CardTitle className="text-xs font-semibold uppercase tracking-wider text-gray-500">{label}</CardTitle>}
+      </CardHeader>
+      <CardContent className="p-4 pt-0">
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Current Rate Display */}
@@ -59,32 +65,33 @@ const DataDisplay = ({
           </div>
         </div>
 
-        {/* Control Buttons */}
-        <div className="flex justify-center mt-4 gap-3">
-          <Button
-            variant="outline"
-            className="flex items-center gap-2"
-            onClick={onToggle}
-          >
-            {isActive ? (
-              <>
-                <CircleStop className="h-4 w-4" /> Stop
-              </>
-            ) : (
-              <>
-                <CirclePlay className="h-4 w-4" /> Start
-              </>
-            )}
-          </Button>
+        {showControls && (
+          <div className="flex justify-center mt-4 gap-3">
+            <Button
+              variant="outline"
+              className="flex items-center gap-2"
+              onClick={onToggle}
+            >
+              {isActive ? (
+                <>
+                  <CircleStop className="h-4 w-4" /> Stop
+                </>
+              ) : (
+                <>
+                  <CirclePlay className="h-4 w-4" /> Start
+                </>
+              )}
+            </Button>
 
-          <Button
-            variant="outline"
-            className="flex items-center gap-2"
-            onClick={onReset}
-          >
-            <RefreshCw className="h-4 w-4" /> Reset
-          </Button>
-        </div>
+            <Button
+              variant="outline"
+              className="flex items-center gap-2"
+              onClick={onReset}
+            >
+              <RefreshCw className="h-4 w-4" /> Reset
+            </Button>
+          </div>
+        )}
       </CardContent>
     </Card >
   );

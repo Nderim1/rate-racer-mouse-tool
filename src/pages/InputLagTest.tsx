@@ -13,6 +13,7 @@ import MainLayout from '@/Layout/MainLayout';
 const InputLagTest = () => {
   const { toast } = useToast();
   const [isActive, setIsActive] = useState(false);
+  const [isTargetReady, setIsTargetReady] = useState(false); 
   const [results, setResults] = useState<number[]>([]);
   const [averageLag, setAverageLag] = useState<number | null>(null);
   const [bestLag, setBestLag] = useState<number | null>(null);
@@ -23,6 +24,8 @@ const InputLagTest = () => {
 
   // Reset the test
   const handleReset = () => {
+    setIsActive(false); 
+    setIsTargetReady(false); 
     setResults([]);
     setAverageLag(null);
     setBestLag(null);
@@ -38,14 +41,22 @@ const InputLagTest = () => {
   const handleStart = () => {
     if (isActive) return;
     setIsActive(true);
+    setIsTargetReady(false); // Reset for the new round
     timestampRef.current = null;
+    console.log(`[InputLagTest] handleStart called at: ${performance.now()}`); // Log start
 
     // Random delay between 1-5 seconds
     const delay = Math.random() * 4000 + 1000;
+    console.log(`[InputLagTest] Calculated delay: ${Math.round(delay)}ms`); // Log calculated delay
 
     setTimeout(() => {
-      if (targetRef.current) {
+      // Only proceed if the test is still considered active by the time the timeout fires
+      // This can prevent setting target ready if reset was hit very quickly
+      console.log(`[InputLagTest] setTimeout callback fired at: ${performance.now()}`); // Log when timeout executes
+      if (targetRef.current) { // Check if component/ref is still mounted
         timestampRef.current = performance.now();
+        setIsTargetReady(true); // <<-- This will trigger re-render
+        console.log(`[InputLagTest] Target is now READY at: ${timestampRef.current}`); // Log target ready time
       }
     }, delay);
   };
@@ -54,13 +65,23 @@ const InputLagTest = () => {
   const handleClick = () => {
     if (!isActive) return;
 
-    if (!timestampRef.current) {
+    if (!isTargetReady) { 
       toast({
         title: "Too early!",
         description: "Please wait for the target to activate before clicking.",
         variant: "destructive"
       });
       setIsActive(false);
+      setIsTargetReady(false); 
+      return;
+    }
+
+    // If isTargetReady is true, timestampRef.current should be set
+    if (!timestampRef.current) {
+      // This case should ideally not be hit if isTargetReady is true, but as a safeguard:
+      console.error("Inconsistent state: Target was ready but timestampRef is null.");
+      setIsActive(false);
+      setIsTargetReady(false);
       return;
     }
 
@@ -79,6 +100,7 @@ const InputLagTest = () => {
 
     clickCounterRef.current += 1;
     setIsActive(false);
+    setIsTargetReady(false); 
 
     toast({
       title: "Input lag recorded",
@@ -130,11 +152,11 @@ const InputLagTest = () => {
             <div
               ref={targetRef}
               onClick={handleClick}
-              className={`test-area cursor-pointer flex items-center justify-center transition-colors ${isActive && timestampRef.current ? 'bg-primary/30 test-area-active' : ''}`}
+              className={`test-area cursor-pointer flex items-center justify-center transition-colors ${isActive && isTargetReady ? 'bg-green-500' : 'bg-muted'}`}
               style={{ minHeight: '300px' }}
             >
               {isActive ? (
-                timestampRef.current ? (
+                isTargetReady ? (
                   <div className="text-2xl font-bold">Click Now!</div>
                 ) : (
                   <div className="text-xl">Wait for green...</div>
@@ -176,28 +198,34 @@ const InputLagTest = () => {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <DataDisplay
+                label="Average Lag (ms)"
                 current={averageLag !== null ? Math.round(averageLag) : 0}
                 average={averageLag !== null ? Math.round(averageLag) : 0}
                 max={averageLag !== null ? Math.round(averageLag) : 0}
-                isActive={isActive}
-                onReset={handleReset}
-                onToggle={handleStart}
+                isActive={isActive} 
+                onReset={handleReset}   
+                onToggle={handleStart}  
+                showControls={false}  
               />
               <DataDisplay
+                label="Best Lag (ms)"
                 current={bestLag !== null ? Math.round(bestLag) : 0}
                 average={bestLag !== null ? Math.round(bestLag) : 0}
                 max={bestLag !== null ? Math.round(bestLag) : 0}
                 isActive={isActive}
                 onReset={handleReset}
                 onToggle={handleStart}
+                showControls={false} 
               />
               <DataDisplay
+                label="Worst Lag (ms)"
                 current={worstLag !== null ? Math.round(worstLag) : 0}
                 average={worstLag !== null ? Math.round(worstLag) : 0}
                 max={worstLag !== null ? Math.round(worstLag) : 0}
                 isActive={isActive}
                 onReset={handleReset}
                 onToggle={handleStart}
+                showControls={false} 
               />
             </div>
 
