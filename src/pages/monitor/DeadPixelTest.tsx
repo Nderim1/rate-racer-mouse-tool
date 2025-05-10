@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Helmet } from 'react-helmet-async';
 import MainLayout from '@/Layout/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -119,6 +120,22 @@ const DeadPixelTest: React.FC = () => {
       headerTitle="Dead Pixel / Stuck Pixel Test"
       headerDescription="Check your screen for dead, stuck, or bright pixels using full-screen solid colors."
     >
+      <Helmet>
+        <title>Dead Pixel & Stuck Pixel Test | Monitor Checker | TestMyRig</title>
+        <meta name="description" content="Test your monitor for dead, stuck, or bright pixels with our full-screen color test. Easily identify screen defects and ensure pixel perfect display quality." />
+        <link rel="canonical" href="https://testmyrig.com/monitor-tools/dead-pixel-test" />
+        <meta property="og:title" content="Dead Pixel & Stuck Pixel Test | Monitor Checker | TestMyRig" />
+        <meta property="og:description" content="Test your monitor for dead, stuck, or bright pixels. Our full-screen color test helps you identify screen defects quickly." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://testmyrig.com/monitor-tools/dead-pixel-test" />
+        <meta property="og:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
+        <meta property="og:site_name" content="TestMyRig" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Dead Pixel & Stuck Pixel Test | Monitor Checker | TestMyRig" />
+        <meta name="twitter:description" content="Test your monitor for dead, stuck, or bright pixels. Our full-screen color test helps you identify screen defects quickly." />
+        <meta name="twitter:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
+      </Helmet>
       <div
         ref={fullScreenRef}
         style={{ backgroundColor: isFullScreen ? currentColor : 'transparent' }}
@@ -187,7 +204,8 @@ const DeadPixelTest: React.FC = () => {
                     </Button>
                   ))}
                 </div>
-                <Button onClick={toggleFullScreen} className="w-full mt-4">\n                  <Maximize className="mr-2 h-4 w-4" />
+                <Button onClick={toggleFullScreen} className="w-full mt-4">
+                  <Maximize className="mr-2 h-4 w-4" />
                   Toggle Full Screen
                 </Button>
               </CardContent>

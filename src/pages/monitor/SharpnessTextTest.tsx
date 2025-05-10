@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Helmet } from 'react-helmet-async';
 import MainLayout from '@/Layout/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -95,6 +96,22 @@ const SharpnessTextTest: React.FC = () => {
       headerTitle="Sharpness & Text Clarity Test"
       headerDescription="Evaluate your monitor's sharpness for clear text and images."
     >
+      <Helmet>
+        <title>Monitor Sharpness & Text Clarity Test | TestMyRig</title>
+        <meta name="description" content="Test and adjust your monitor's sharpness for optimal text clarity and image detail. Use checkerboard patterns and text samples to fine-tune settings." />
+        <link rel="canonical" href="https://testmyrig.com/monitor-tools/sharpness-text-test" />
+        <meta property="og:title" content="Monitor Sharpness & Text Clarity Test | TestMyRig" />
+        <meta property="og:description" content="Test and adjust your monitor's sharpness for optimal text clarity and image detail. Fine-tune your display settings with our test patterns." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://testmyrig.com/monitor-tools/sharpness-text-test" />
+        <meta property="og:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
+        <meta property="og:site_name" content="TestMyRig" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Monitor Sharpness & Text Clarity Test | TestMyRig" />
+        <meta name="twitter:description" content="Test and adjust your monitor's sharpness for optimal text clarity and image detail. Fine-tune your display settings with our test patterns." />
+        <meta name="twitter:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
+      </Helmet>
       <div ref={fullScreenRef} className={`${isFullScreen ? 'fixed inset-0 z-[100] bg-white overflow-auto' : 'relative'}`}>
         {isFullScreen && (
           <Button onClick={toggleFullScreen} variant="outline" size="sm" className="fixed top-4 right-4 z-[110] bg-black bg-opacity-50 text-white hover:bg-opacity-75">

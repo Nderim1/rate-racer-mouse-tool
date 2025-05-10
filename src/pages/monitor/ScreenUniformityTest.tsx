@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Helmet } from 'react-helmet-async';
 import MainLayout from '@/Layout/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -111,6 +112,22 @@ const ScreenUniformityTest: React.FC = () => {
       headerTitle="Screen Uniformity Test"
       headerDescription="Check for color and brightness inconsistencies across your monitor."
     >
+      <Helmet>
+        <title>Screen Uniformity Test - Backlight Bleed & Clouding | TestMyRig</title>
+        <meta name="description" content="Test your monitor for screen uniformity, backlight bleed, clouding, and color tints. Use full-screen patterns to identify display inconsistencies." />
+        <link rel="canonical" href="https://testmyrig.com/monitor-tools/screen-uniformity-test" />
+        <meta property="og:title" content="Screen Uniformity Test - Backlight Bleed & Clouding | TestMyRig" />
+        <meta property="og:description" content="Test your monitor for screen uniformity, backlight bleed, and clouding. Identify display inconsistencies with full-screen patterns." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://testmyrig.com/monitor-tools/screen-uniformity-test" />
+        <meta property="og:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
+        <meta property="og:site_name" content="TestMyRig" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Screen Uniformity Test - Backlight Bleed & Clouding | TestMyRig" />
+        <meta name="twitter:description" content="Test your monitor for screen uniformity, backlight bleed, and clouding. Identify display inconsistencies with full-screen patterns." />
+        <meta name="twitter:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
+      </Helmet>
       <div ref={fullScreenRef} style={{ backgroundColor: isFullScreen ? currentPattern : 'transparent' }} className={`transition-colors duration-150 ${isFullScreen ? 'fixed inset-0 z-[100]' : 'relative'}`}>
         {isFullScreen && (
           <div className='absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center p-4'>

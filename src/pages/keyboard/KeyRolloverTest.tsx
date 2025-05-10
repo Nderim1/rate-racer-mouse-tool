@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Helmet } from 'react-helmet-async';
 import MainLayout from '@/Layout/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -105,6 +106,22 @@ const KeyRolloverTest: React.FC = () => {
       headerTitle="Key Rollover & Ghosting Test"
       headerDescription="Test your keyboard's N-Key Rollover (NKRO) capability and check for ghosting."
     >
+      <Helmet>
+        <title>Key Rollover & NKRO Test - Keyboard Simultaneous Press Test | TestMyRig</title>
+        <meta name="description" content="Test your keyboard's N-Key Rollover (NKRO) and identify ghosting. See how many keys your keyboard can register at once. Essential for gamers and fast typists." />
+        <link rel="canonical" href="https://testmyrig.com/keyboard-tools/key-rollover-test" />
+        <meta property="og:title" content="Key Rollover & NKRO Test - Keyboard Simultaneous Press Test | TestMyRig" />
+        <meta property="og:description" content="Test your keyboard's N-Key Rollover (NKRO) and identify ghosting. See how many keys your keyboard can register at once." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://testmyrig.com/keyboard-tools/key-rollover-test" />
+        <meta property="og:image" content="https://testmyrig.com/images/og-keyboard-tools.png" /> {/* Using keyboard category OG image */}
+        <meta property="og:site_name" content="TestMyRig" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Key Rollover & NKRO Test - Keyboard Simultaneous Press Test | TestMyRig" />
+        <meta name="twitter:description" content="Test your keyboard's N-Key Rollover (NKRO) and identify ghosting. See how many keys your keyboard can register at once." />
+        <meta name="twitter:image" content="https://testmyrig.com/images/og-keyboard-tools.png" /> {/* Using keyboard category OG image */}
+      </Helmet>
       <div className="space-y-6">
         <Card>
           <CardHeader>

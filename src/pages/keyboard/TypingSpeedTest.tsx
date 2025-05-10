@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Helmet } from 'react-helmet-async';
 import MainLayout from '@/Layout/MainLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -254,10 +255,26 @@ const TypingSpeedTest: React.FC = () => {
 
   return (
     <MainLayout 
-      title="Typing Speed Test - TestMyRig"
+      title="Typing Speed Test - WPM & Accuracy | TestMyRig"
       headerTitle="Typing Speed Test"
-      headerDescription="Measure your typing speed (WPM), accuracy, and characters per minute (CPM). Practice and improve!"
+      headerDescription="Measure your Words Per Minute (WPM), Characters Per Minute (CPM), and accuracy."
     >
+      <Helmet>
+        <title>Typing Speed Test - Check Your WPM, CPM & Accuracy | TestMyRig</title>
+        <meta name="description" content="Test your typing speed (WPM & CPM) and accuracy. Practice with sample texts and track your progress. Improve your typing skills today!" />
+        <link rel="canonical" href="https://testmyrig.com/keyboard-tools/typing-speed-test" />
+        <meta property="og:title" content="Typing Speed Test - Check Your WPM, CPM & Accuracy | TestMyRig" />
+        <meta property="og:description" content="Test your typing speed (WPM & CPM) and accuracy. Practice with sample texts and track your progress." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://testmyrig.com/keyboard-tools/typing-speed-test" />
+        <meta property="og:image" content="https://testmyrig.com/images/og-keyboard-tools.png" /> {/* Using keyboard category OG image */}
+        <meta property="og:site_name" content="TestMyRig" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Typing Speed Test - Check Your WPM, CPM & Accuracy | TestMyRig" />
+        <meta name="twitter:description" content="Test your typing speed (WPM & CPM) and accuracy. Practice with sample texts and track your progress." />
+        <meta name="twitter:image" content="https://testmyrig.com/images/og-keyboard-tools.png" /> {/* Using keyboard category OG image */}
+      </Helmet>
       <Card>
         <CardHeader>
           <div className="flex justify-between items-center">

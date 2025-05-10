@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { AppSidebar } from '@/components/AppSidebar';
 import { SidebarProvider, SidebarInset, SidebarRail, SidebarTrigger } from "@/components/ui/sidebar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -101,6 +102,22 @@ const DPIAnalyzer = () => {
 
   return (
     <MainLayout headerTitle="Mouse DPI Analyzer" headerDescription="Measure your mouse's DPI with precision">
+      <Helmet>
+        <title>Mouse DPI Analyzer - Check Your True Mouse DPI | TestMyRig</title>
+        <meta name="description" content="Accurately measure your mouse's true DPI (Dots Per Inch). Understand how DPI affects sensitivity and precision for gaming and everyday use." />
+        <link rel="canonical" href="https://testmyrig.com/mouse-tools/dpi-analyzer" />
+        <meta property="og:title" content="Mouse DPI Analyzer - Check Your True Mouse DPI | TestMyRig" />
+        <meta property="og:description" content="Accurately measure your mouse's true DPI (Dots Per Inch). Understand how DPI affects sensitivity and precision." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://testmyrig.com/mouse-tools/dpi-analyzer" />
+        <meta property="og:image" content="https://testmyrig.com/images/og-mouse-tools.png" /> {/* Re-using category OG image */}
+        <meta property="og:site_name" content="TestMyRig" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Mouse DPI Analyzer - Check Your True Mouse DPI | TestMyRig" />
+        <meta name="twitter:description" content="Accurately measure your mouse's true DPI (Dots Per Inch). Understand how DPI affects sensitivity and precision." />
+        <meta name="twitter:image" content="https://testmyrig.com/images/og-mouse-tools.png" /> {/* Re-using category OG image */}
+      </Helmet>
       {/* Instructions Card */}
       <div className="flex flex-col gap-2 ">
         <Card>

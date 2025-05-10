@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { AppSidebar } from '@/components/AppSidebar';
 import { SidebarProvider, SidebarInset, SidebarRail, SidebarTrigger } from "@/components/ui/sidebar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -9,8 +10,8 @@ import ClickTestArea from '@/components/ClickTestArea';
 import ClickSpeedChart from '@/components/ClickSpeedChart';
 import ClickSpeedInfo from '@/components/ClickSpeedInfo';
 import { Badge } from "@/components/ui/badge";
-import MainLayout from '@/Layout/MainLayout'; // Added MainLayout import
-import InfoSection from '@/components/InfoSection'; // Added InfoSection import
+import MainLayout from '@/Layout/MainLayout'; 
+import InfoSection from '@/components/InfoSection'; 
 
 const ClickSpeedTest = () => {
   const { toast } = useToast();
@@ -113,6 +114,22 @@ const ClickSpeedTest = () => {
 
   return (
     <MainLayout headerTitle="Click Speed Test" headerDescription="Measure how many clicks per second (CPS) you can perform">
+      <Helmet>
+        <title>Click Speed Test (CPS Test) - Check Your Mouse Clicking Speed | TestMyRig</title>
+        <meta name="description" content="Test your mouse click speed (CPS - clicks per second). Find out how fast you can click in 10 seconds. Improve your CPS for gaming and other applications." />
+        <link rel="canonical" href="https://testmyrig.com/mouse-tools/click-speed-test" />
+        <meta property="og:title" content="Click Speed Test (CPS Test) - Check Your Mouse Clicking Speed | TestMyRig" />
+        <meta property="og:description" content="Test your mouse click speed (CPS - clicks per second). Find out how fast you can click in 10 seconds." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://testmyrig.com/mouse-tools/click-speed-test" />
+        <meta property="og:image" content="https://testmyrig.com/images/og-mouse-tools.png" /> 
+        <meta property="og:site_name" content="TestMyRig" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Click Speed Test (CPS Test) - Check Your Mouse Clicking Speed | TestMyRig" />
+        <meta name="twitter:description" content="Test your mouse click speed (CPS - clicks per second). Find out how fast you can click in 10 seconds." />
+        <meta name="twitter:image" content="https://testmyrig.com/images/og-mouse-tools.png" /> 
+      </Helmet>
 
       {/* Testing Area */}
       <div className="mb-6">

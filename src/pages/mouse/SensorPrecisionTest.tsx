@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { Helmet } from 'react-helmet-async'; 
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -177,6 +178,22 @@ const SensorPrecisionTest = () => {
 
   return (
     <MainLayout headerTitle="Mouse Sensor Precision Test" headerDescription="Test the accuracy and consistency of your mouse sensor by clicking targets.">
+      <Helmet>
+        <title>Mouse Sensor Precision & Accuracy Test | TestMyRig</title>
+        <meta name="description" content="Test your mouse sensor's precision and consistency. Click targets to measure deviation and accuracy. Improve your aim and mouse control." />
+        <link rel="canonical" href="https://testmyrig.com/mouse-tools/sensor-precision-test" />
+        <meta property="og:title" content="Mouse Sensor Precision & Accuracy Test | TestMyRig" />
+        <meta property="og:description" content="Test your mouse sensor's precision and consistency. Click targets to measure deviation and accuracy." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://testmyrig.com/mouse-tools/sensor-precision-test" />
+        <meta property="og:image" content="https://testmyrig.com/images/og-mouse-tools.png" /> {/* Re-using category OG image */}
+        <meta property="og:site_name" content="TestMyRig" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Mouse Sensor Precision & Accuracy Test | TestMyRig" />
+        <meta name="twitter:description" content="Test your mouse sensor's precision and consistency. Click targets to measure deviation and accuracy." />
+        <meta name="twitter:image" content="https://testmyrig.com/images/og-mouse-tools.png" /> {/* Re-using category OG image */}
+      </Helmet>
       <div className="container mx-auto p-4 md:p-8 flex flex-col items-center">
         <Card className="w-full max-w-3xl">
           <CardHeader>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Helmet } from 'react-helmet-async';
 import MainLayout from '@/Layout/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -114,6 +115,22 @@ const ColorBandingTest: React.FC = () => {
       headerTitle="Color Banding / Gradient Test"
       headerDescription="Test your monitor's ability to display smooth color gradients."
     >
+      <Helmet>
+        <title>Monitor Color Banding & Gradient Test | TestMyRig</title>
+        <meta name="description" content="Test your monitor for color banding with our gradient test. Identify issues with color depth and smooth transitions on your display. Ensure optimal visual quality." />
+        <link rel="canonical" href="https://testmyrig.com/monitor-tools/color-banding-test" />
+        <meta property="og:title" content="Monitor Color Banding & Gradient Test | TestMyRig" />
+        <meta property="og:description" content="Test your monitor for color banding with our gradient test. Identify issues with color depth and smooth transitions on your display." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://testmyrig.com/monitor-tools/color-banding-test" />
+        <meta property="og:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
+        <meta property="og:site_name" content="TestMyRig" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Monitor Color Banding & Gradient Test | TestMyRig" />
+        <meta name="twitter:description" content="Test your monitor for color banding with our gradient test. Identify issues with color depth and smooth transitions on your display." />
+        <meta name="twitter:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
+      </Helmet>
       <div ref={fullScreenRef} className={`relative ${isFullScreen ? 'fixed inset-0 z-[100] bg-background' : ''}`}>
 
         <div

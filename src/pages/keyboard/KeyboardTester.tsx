@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Helmet } from 'react-helmet-async';
 import MainLayout from '@/Layout/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -167,6 +168,22 @@ const KeyboardTester: React.FC = () => {
       headerTitle="Keyboard Tester"
       headerDescription="Visualize your key presses in real-time. Check if all your keyboard keys are working correctly."
     >
+      <Helmet>
+        <title>Online Keyboard Tester - Check Your Keyboard Keys | TestMyRig</title>
+        <meta name="description" content="Test your keyboard online with our interactive keyboard tester. Visualize key presses, check for dead or malfunctioning keys, and see key event data." />
+        <link rel="canonical" href="https://testmyrig.com/keyboard-tools/keyboard-tester" />
+        <meta property="og:title" content="Online Keyboard Tester - Check Your Keyboard Keys | TestMyRig" />
+        <meta property="og:description" content="Test your keyboard online with our interactive keyboard tester. Visualize key presses and check for malfunctioning keys." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://testmyrig.com/keyboard-tools/keyboard-tester" />
+        <meta property="og:image" content="https://testmyrig.com/images/og-keyboard-tools.png" /> {/* Using keyboard category OG image */}
+        <meta property="og:site_name" content="TestMyRig" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Online Keyboard Tester - Check Your Keyboard Keys | TestMyRig" />
+        <meta name="twitter:description" content="Test your keyboard online with our interactive keyboard tester. Visualize key presses and check for malfunctioning keys." />
+        <meta name="twitter:image" content="https://testmyrig.com/images/og-keyboard-tools.png" /> {/* Using keyboard category OG image */}
+      </Helmet>
       <div className="space-y-6">
         <Card>
           <CardHeader>

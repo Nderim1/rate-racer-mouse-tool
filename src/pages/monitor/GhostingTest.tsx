@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Helmet } from 'react-helmet-async';
 import MainLayout from '@/Layout/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -134,6 +135,22 @@ const GhostingTest: React.FC = () => {
       headerTitle="Ghosting / Motion Blur Test"
       headerDescription="Visually assess your monitor's motion performance."
     >
+      <Helmet>
+        <title>Monitor Ghosting & Motion Blur Test | UFO Test Alternative | TestMyRig</title>
+        <meta name="description" content="Test your monitor for ghosting and motion blur with our animation test. Assess pixel response time and motion clarity. An alternative to UFO tests." />
+        <link rel="canonical" href="https://testmyrig.com/monitor-tools/ghosting-test" />
+        <meta property="og:title" content="Monitor Ghosting & Motion Blur Test | UFO Test Alternative | TestMyRig" />
+        <meta property="og:description" content="Test your monitor for ghosting and motion blur. Assess pixel response time and motion clarity with our animation test." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://testmyrig.com/monitor-tools/ghosting-test" />
+        <meta property="og:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
+        <meta property="og:site_name" content="TestMyRig" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Monitor Ghosting & Motion Blur Test | UFO Test Alternative | TestMyRig" />
+        <meta name="twitter:description" content="Test your monitor for ghosting and motion blur. Assess pixel response time and motion clarity with our animation test." />
+        <meta name="twitter:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
+      </Helmet>
       <div ref={fullScreenRef} className={`${isFullScreen ? 'fixed inset-0 z-[100] bg-gray-800' : 'relative'}`}>
         {isFullScreen && (
           <div className='absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center p-4' id="animation-container">

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import TestArea from '@/components/TestArea';
 import DataDisplay from '@/components/DataDisplay';
 import PollingChart from '@/components/PollingChart';
@@ -74,6 +75,22 @@ const Index = () => {
 
   return (
     <MainLayout headerTitle="Mouse Polling Rate Tester" headerDescription="Measure how many times per second your mouse reports its position to your computer">
+      <Helmet>
+        <title>Mouse Polling Rate Test - Check Your Mouse Hz | TestMyRig</title>
+        <meta name="description" content="Test your mouse's polling rate (Hz) accurately. See real-time, average, and max polling rate. Understand what polling rate means for gaming and general use." />
+        <link rel="canonical" href="https://testmyrig.com/mouse-tools/polling-rate-test" />
+        <meta property="og:title" content="Mouse Polling Rate Test - Check Your Mouse Hz | TestMyRig" />
+        <meta property="og:description" content="Test your mouse's polling rate (Hz) accurately. See real-time, average, and max polling rate." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://testmyrig.com/mouse-tools/polling-rate-test" />
+        <meta property="og:image" content="https://testmyrig.com/images/og-mouse-tools.png" /> {/* Re-using category OG image for now */}
+        <meta property="og:site_name" content="TestMyRig" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Mouse Polling Rate Test - Check Your Mouse Hz | TestMyRig" />
+        <meta name="twitter:description" content="Test your mouse's polling rate (Hz) accurately. See real-time, average, and max polling rate." />
+        <meta name="twitter:image" content="https://testmyrig.com/images/og-mouse-tools.png" /> {/* Re-using category OG image for now */}
+      </Helmet>
       {/* Testing Area */}
       <div className="mb-6">
         {isTouchDevice ? (

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Helmet } from 'react-helmet-async';
 import MainLayout from '@/Layout/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -112,6 +113,22 @@ const ContrastTest: React.FC = () => {
       headerTitle="Visual Contrast Ratio Test"
       headerDescription="Check your monitor's black and white level differentiation."
     >
+      <Helmet>
+        <title>Monitor Contrast Ratio Test - Black & White Levels | TestMyRig</title>
+        <meta name="description" content="Test your monitor's contrast ratio by checking black and white level differentiation. Identify crushed blacks or clipped whites for optimal picture quality." />
+        <link rel="canonical" href="https://testmyrig.com/monitor-tools/contrast-test" />
+        <meta property="og:title" content="Monitor Contrast Ratio Test - Black & White Levels | TestMyRig" />
+        <meta property="og:description" content="Test your monitor's contrast ratio by checking black and white level differentiation. Optimize your display settings." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://testmyrig.com/monitor-tools/contrast-test" />
+        <meta property="og:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
+        <meta property="og:site_name" content="TestMyRig" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Monitor Contrast Ratio Test - Black & White Levels | TestMyRig" />
+        <meta name="twitter:description" content="Test your monitor's contrast ratio by checking black and white level differentiation. Optimize your display settings." />
+        <meta name="twitter:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
+      </Helmet>
       <div ref={fullScreenRef} className={`${isFullScreen ? 'fixed inset-0 z-[100] bg-gray-200 dark:bg-gray-800 overflow-auto' : 'relative'}`}>
         {isFullScreen && (
           <Button onClick={toggleFullScreen} variant="outline" size="sm" className="fixed top-4 right-4 z-[110] bg-black bg-opacity-50 text-white hover:bg-opacity-75">

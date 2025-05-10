@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { AppSidebar } from '@/components/AppSidebar';
 import { SidebarProvider, SidebarInset, SidebarRail, SidebarTrigger } from "@/components/ui/sidebar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -137,6 +138,22 @@ const InputLagTest = () => {
 
   return (
     <MainLayout headerTitle="Input Lag Test" headerDescription="Click the green area as soon as it appears to measure your input lag">
+      <Helmet>
+        <title>Mouse Input Lag Test - Check Your Reaction Time & System Latency | TestMyRig</title>
+        <meta name="description" content="Test your mouse input lag and reaction time. Click the target as it appears to measure your system's responsiveness. Understand factors affecting input latency." />
+        <link rel="canonical" href="https://testmyrig.com/mouse-tools/input-lag-test" />
+        <meta property="og:title" content="Mouse Input Lag Test - Check Your Reaction Time & System Latency | TestMyRig" />
+        <meta property="og:description" content="Test your mouse input lag and reaction time. Click the target as it appears to measure your system's responsiveness." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://testmyrig.com/mouse-tools/input-lag-test" />
+        <meta property="og:image" content="https://testmyrig.com/images/og-mouse-tools.png" /> {/* Re-using category OG image */}
+        <meta property="og:site_name" content="TestMyRig" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Mouse Input Lag Test - Check Your Reaction Time & System Latency | TestMyRig" />
+        <meta name="twitter:description" content="Test your mouse input lag and reaction time. Click the target as it appears to measure your system's responsiveness." />
+        <meta name="twitter:image" content="https://testmyrig.com/images/og-mouse-tools.png" /> {/* Re-using category OG image */}
+      </Helmet>
       <div className='flex flex-col gap-4'>
         <Card>
           <CardHeader>
