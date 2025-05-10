@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Type, Timer, Percent, AlertCircle, RefreshCcw } from 'lucide-react';
+import InfoSection from '@/components/InfoSection';
 
 const SAMPLE_TEXTS = [
   "The quick brown fox jumps over the lazy dog.",
@@ -37,7 +38,10 @@ const TypingSpeedTest: React.FC = () => {
   const selectNewText = useCallback(() => {
     const randomIndex = Math.floor(Math.random() * SAMPLE_TEXTS.length);
     setCurrentText(SAMPLE_TEXTS[randomIndex]);
-    setCharIndex(0); // Reset charIndex when new text is selected
+    setCharIndex(0); 
+    setInputValue(''); // Also clear input value when new text is selected
+    setCorrectChars(0);
+    setMistakes(0);
   }, []);
 
   useEffect(() => {
@@ -46,12 +50,10 @@ const TypingSpeedTest: React.FC = () => {
 
   const resetTest = useCallback(() => {
     setStatus('idle');
-    setInputValue('');
+    // setInputValue(''); // Handled by selectNewText
     setStartTime(null);
     setElapsedTime(0);
-    // charIndex is reset by selectNewText
-    setCorrectChars(0);
-    setMistakes(0);
+    // charIndex, correctChars, mistakes are reset by selectNewText & its call
     setWpm(0);
     setCpm(0);
     setRawWpm(0);
@@ -60,7 +62,7 @@ const TypingSpeedTest: React.FC = () => {
       clearInterval(timerIntervalRef.current);
       timerIntervalRef.current = null;
     }
-    selectNewText();
+    selectNewText(); // This will also clear inputValue and set charIndex to 0
     inputRef.current?.focus();
   }, [selectNewText]);
 
@@ -116,34 +118,59 @@ const TypingSpeedTest: React.FC = () => {
   }, [status, startTime, calculateMetrics]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const typedValue = event.target.value;
+    const newTypedValue = event.target.value;
+    const previousInputValue = inputValue; // inputValue from state is the value *before* this event
 
     if (status === 'finished' || !currentText) return;
 
-    if (status === 'idle') {
+    if (status === 'idle' && newTypedValue.length > 0) {
       setStatus('running');
       setStartTime(Date.now());
-      setElapsedTime(0); // Ensure timer starts from 0
+      setElapsedTime(0);
     }
 
-    setInputValue(typedValue);
+    setInputValue(newTypedValue); // Update the input field's display value
 
-    // Process the last typed character
-    const lastTypedChar = typedValue[typedValue.length - 1];
-    const expectedChar = currentText[charIndex];
-
-    if (lastTypedChar === expectedChar) {
-      setCorrectChars(prev => prev + 1);
-    } else {
-      setMistakes(prev => prev + 1);
+    // Determine if a character was added or removed (backspace)
+    if (newTypedValue.length > previousInputValue.length) {
+      // Character(s) added
+      const newCharsCount = newTypedValue.length - previousInputValue.length;
+      // Check only the newly added character(s) for mistakes
+      for (let i = 0; i < newCharsCount; i++) {
+        const charIndexInNewTypedValue = previousInputValue.length + i;
+        if (charIndexInNewTypedValue < currentText.length) {
+          if (newTypedValue[charIndexInNewTypedValue] !== currentText[charIndexInNewTypedValue]) {
+            setMistakes(prevMistakes => prevMistakes + 1);
+          }
+        } else {
+          // Typed beyond the sample text, count as a mistake
+          setMistakes(prevMistakes => prevMistakes + 1);
+        }
+      }
+    } else if (newTypedValue.length < previousInputValue.length) {
+      // Character(s) removed (backspace)
+      const backspaceCount = previousInputValue.length - newTypedValue.length;
+      setMistakes(prevMistakes => prevMistakes + backspaceCount);
     }
-    setCharIndex(prev => prev + 1);
+    // If lengths are equal (e.g., character replaced by selection), mistakes are not added here
+    // but correctChars will be updated below, effectively penalizing if the replacement is wrong.
+
+    // Recalculate correctChars based on the entire current newTypedValue
+    let currentCorrectChars = 0;
+    for (let i = 0; i < newTypedValue.length; i++) {
+      if (i < currentText.length && newTypedValue[i] === currentText[i]) {
+        currentCorrectChars++;
+      }
+    }
+    setCorrectChars(currentCorrectChars);
+    
+    // charIndex still represents the current length of the input
+    setCharIndex(newTypedValue.length);
 
     // Check for test completion
-    if (charIndex + 1 >= currentText.length) {
+    if (status === 'running' && newTypedValue.length >= currentText.length) {
       setStatus('finished');
-      if (timerIntervalRef.current) clearInterval(timerIntervalRef.current); // Stop timer immediately
-      // Final metrics are calculated by useEffect due to status change
+      if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
     }
   };
 
@@ -151,22 +178,86 @@ const TypingSpeedTest: React.FC = () => {
   const renderSampleText = () => {
     if (!currentText) return null;
     return currentText.split('').map((char, index) => {
-      let className = 'text-muted-foreground'; // Untyped characters
+      let className = 'text-muted-foreground'; // Default for untyped characters
 
-      if (index < charIndex) { // Characters already typed
-        className = inputValue[index] === char ? 'text-green-500' : 'text-red-500 line-through';
+      if (index < charIndex) { // Characters up to the current input length (charIndex)
+        if (index < inputValue.length && inputValue[index] === currentText[index]) {
+             className = 'text-green-500'; // Correctly typed
+        } else if (index < inputValue.length) { // Check inputValue bounds again for safety
+             className = 'text-red-500 line-through'; // Incorrectly typed
+        }
+        // If inputValue is shorter than charIndex (e.g., after backspace), already typed chars remain 'muted'
+        // This part might need further refinement if we want to show 'previously correct but now untyped' differently
       }
       
-      if (index === charIndex && status !== 'finished') { // Current character to type
+      // Highlight the character that *should* be typed next
+      if (index === charIndex && status !== 'finished') { 
         className = 'bg-blue-200 dark:bg-blue-700 rounded-sm text-black dark:text-white animate-pulse';
+      }
+      // If the test is finished and this char was beyond the input, keep it muted.
+      if (status === 'finished' && index >= charIndex) {
+        className = 'text-muted-foreground';
       }
 
       return <span key={`${char}-${index}`} className={className}>{char}</span>;
     });
   };
 
+  // SEO and Info Content
+  const typingTestInfo = {
+    leftCardData: {
+      title: "Master Your Typing: Understanding Your Speed & Accuracy",
+      description: "Learn what your typing speed test results mean and how this tool helps you track your progress.",
+      mainParagraph: "Our Typing Speed Test measures your proficiency by calculating your Words Per Minute (WPM), Characters Per Minute (CPM), and overall accuracy. Regular practice can significantly improve your typing skills, boosting productivity for work, study, or general computer use. This tool provides instant feedback, highlighting errors and tracking your performance over time. Aim for a balance between speed and precision to become a truly efficient typist.",
+      detailList: {
+        heading: "Key Metrics We Track:",
+        items: [
+          "**Net Words Per Minute (WPM):** Your effective typing speed, factoring in errors (based on a standard 5-character word).",
+          "**Characters Per Minute (CPM):** The total number of correct characters typed in one minute.",
+          "**Accuracy:** The percentage of correctly typed characters out of all characters entered.",
+          "**Raw WPM:** Typing speed calculated without penalty for errors, reflecting gross typing rate.",
+          "**Mistakes:** Total count of incorrect characters and backspaces used."
+        ]
+      }
+    },
+    rightCardData: {
+      title: "Typing Speed Test: Frequently Asked Questions",
+      description: "Get answers to common questions about typing speed, WPM, and how to improve.",
+      faqItems: [
+        {
+          question: "What is a good typing speed?",
+          answer: "Average typing speed is around 40 WPM. Speeds of 60-70 WPM are considered good for most professional roles. Competitive typists often exceed 100 WPM. The 'best' speed depends on your personal or professional needs."
+        },
+        {
+          question: "How is Words Per Minute (WPM) calculated?",
+          answer: "Net WPM is typically calculated as: (((Total characters typed / 5) - Uncorrected Errors) / Time in Minutes). Raw WPM ignores errors. Our test primarily focuses on Net WPM and CPM for a comprehensive view."
+        },
+        {
+          question: "How can I improve my typing speed and accuracy?",
+          answer: "Consistent practice is key. Focus on accuracy first, then speed. Use proper finger placement (touch typing), avoid looking at the keyboard, and take short, regular typing tests. Our tool helps you monitor your progress."
+        },
+        {
+          question: "Does accuracy matter more than speed?",
+          answer: "Ideally, both are important. High speed with low accuracy leads to more time spent correcting errors. Aim for at least 95% accuracy while gradually increasing your speed."
+        },
+        {
+          question: "How often should I practice typing?",
+          answer: "Even 10-15 minutes of focused practice daily can lead to significant improvements over a few weeks. Consistency is more effective than infrequent long sessions."
+        },
+        {
+          question: "Why does this test penalize backspaces?",
+          answer: "Penalizing backspaces encourages more precise typing and reflects a truer measure of efficiency, as correcting mistakes takes time in real-world scenarios. It helps train you to type accurately from the start."
+        }
+      ]
+    }
+  };
+
   return (
-    <MainLayout headerTitle="Typing Speed Test" headerDescription="Measure your words per minute (WPM) and accuracy.">
+    <MainLayout 
+      title="Typing Speed Test - TestMyRig"
+      headerTitle="Typing Speed Test"
+      headerDescription="Measure your typing speed (WPM), accuracy, and characters per minute (CPM). Practice and improve!"
+    >
       <Card>
         <CardHeader>
           <div className="flex justify-between items-center">
@@ -192,11 +283,19 @@ const TypingSpeedTest: React.FC = () => {
             ref={inputRef}
             value={inputValue}
             onChange={handleInputChange}
-            placeholder={status === 'idle' ? 'Start typing here to begin the test...' : 'Type the text above...'}
-            disabled={status === 'finished' || !currentText}
-            rows={3} // Reduced rows as user types one line at a time essentially
-            className="text-lg font-mono focus:ring-primary disabled:bg-slate-200 disabled:cursor-not-allowed"
             onPaste={(e) => e.preventDefault()} // Prevent pasting
+            placeholder={status === 'idle' ? 'Start typing here to begin the test...' : 'Type the text above...'}
+            className={`
+              w-full h-32 p-4 text-lg border rounded-md shadow-sm 
+              focus:ring-2 focus:ring-blue-500 
+              dark:text-white dark:focus:ring-blue-400
+              ${status === 'finished' 
+                ? 'bg-slate-50 dark:bg-slate-900' // Subtle background for finished state
+                : 'dark:bg-gray-800 dark:border-gray-700' // Original dark mode styles for normal state
+              }
+            `}
+            disabled={status === 'finished'}
+            aria-label="Typing input area"
           />
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 text-center">
@@ -223,9 +322,9 @@ const TypingSpeedTest: React.FC = () => {
           </div>
 
           {status === 'finished' && (
-            <Card className="mt-6 p-6 bg-green-50 border border-green-300 dark:bg-green-900/30 dark:border-green-700">
-              <CardTitle className="text-2xl text-green-700 dark:text-green-400 mb-2">Test Completed!</CardTitle>
-              <CardDescription className="text-green-600 dark:text-green-300 mb-4">
+            <Card className="mt-6 p-6 bg-card border rounded-lg shadow-sm"> {/* Updated Styling */}
+              <CardTitle className="text-2xl text-green-600 dark:text-green-500 mb-2">Test Completed!</CardTitle> {/* Adjusted Title Color */}
+              <CardDescription className="text-muted-foreground mb-4"> {/* Adjusted Description Color */}
                 Well done! Here are your results. Press Restart to try another text or adjust settings.
               </CardDescription>
               {/* More detailed summary card here */}
@@ -242,6 +341,12 @@ const TypingSpeedTest: React.FC = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* Info Section Added Here */}
+      <div className="mt-8">
+        <InfoSection leftCardData={typingTestInfo.leftCardData} rightCardData={typingTestInfo.rightCardData} />
+      </div>
+
     </MainLayout>
   );
 };

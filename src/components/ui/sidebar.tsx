@@ -498,15 +498,41 @@ SidebarMenu.displayName = "SidebarMenu"
 
 const SidebarMenuItem = React.forwardRef<
   HTMLLIElement,
-  React.ComponentProps<"li">
->(({ className, ...props }, ref) => (
-  <li
-    ref={ref}
-    data-sidebar="menu-item"
-    className={cn("group/menu-item relative", className)}
-    {...props}
-  />
-))
+  React.ComponentProps<"li"> & { tooltip?: string }
+>(({ className, children, tooltip, ...props }, ref) => {
+  const { isMobile } = useSidebar()
+
+  if (tooltip && !isMobile) {
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <li
+            ref={ref}
+            data-sidebar="menu-item"
+            className={cn("group/menu-item relative", className)}
+            {...props}
+          >
+            {children}
+          </li>
+        </TooltipTrigger>
+        <TooltipContent side="right" align="center" sideOffset={4}>
+          {tooltip}
+        </TooltipContent>
+      </Tooltip>
+    )
+  }
+
+  return (
+    <li
+      ref={ref}
+      data-sidebar="menu-item"
+      className={cn("group/menu-item relative", className)}
+      {...props}
+    >
+      {children}
+    </li>
+  )
+})
 SidebarMenuItem.displayName = "SidebarMenuItem"
 
 const sidebarMenuButtonVariants = cva(
@@ -533,58 +559,33 @@ const sidebarMenuButtonVariants = cva(
 
 const SidebarMenuButton = React.forwardRef<
   HTMLButtonElement,
-  React.ComponentProps<"button"> & {
-    asChild?: boolean
-    isActive?: boolean
-    tooltip?: string | React.ComponentProps<typeof TooltipContent>
-  } & VariantProps<typeof sidebarMenuButtonVariants>
+  React.ButtonHTMLAttributes<HTMLButtonElement> &
+    VariantProps<typeof sidebarMenuButtonVariants> & {
+      asChild?: boolean
+      isActive?: boolean
+    }
 >(
   (
     {
-      asChild = false,
-      isActive = false,
-      variant = "default",
-      size = "default",
-      tooltip,
       className,
+      asChild = false,
+      isActive,
+      variant,
+      size,
       ...props
     },
     ref
   ) => {
     const Comp = asChild ? Slot : "button"
-    const { isMobile, state } = useSidebar()
 
-    const button = (
+    return (
       <Comp
         ref={ref}
         data-sidebar="menu-button"
-        data-size={size}
         data-active={isActive}
         className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
         {...props}
       />
-    )
-
-    if (!tooltip) {
-      return button
-    }
-
-    if (typeof tooltip === "string") {
-      tooltip = {
-        children: tooltip,
-      }
-    }
-
-    return (
-      <Tooltip>
-        <TooltipTrigger asChild>{button}</TooltipTrigger>
-        <TooltipContent
-          side="right"
-          align="center"
-          hidden={state !== "collapsed" || isMobile}
-          {...tooltip}
-        />
-      </Tooltip>
     )
   }
 )

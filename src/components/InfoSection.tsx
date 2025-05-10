@@ -6,7 +6,7 @@ interface FAQItem {
   answer: string;
 }
 
-interface InfoSectionProps {
+export interface InfoSectionProps {
   leftCardData: {
     title: string;
     description: string;

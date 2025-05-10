@@ -8,31 +8,31 @@ const mouseToolCategories = [
   {
     title: 'Polling Rate Test',
     description: 'Test your mouse polling rate in real-time.',
-    link: '/polling-rate-test',
+    link: '/mouse-tools/polling-rate-test',
     icon: <Mouse className="w-12 h-12 mb-4 text-primary" />,
   },
   {
     title: 'Click Speed Test',
     description: 'Measure your clicks per second (CPS).',
-    link: '/click-speed',
+    link: '/mouse-tools/click-speed',
     icon: <BarChart2 className="w-12 h-12 mb-4 text-primary" />,
   },
   {
     title: 'DPI Analyzer',
     description: 'Find your mouse\'s true DPI setting.',
-    link: '/dpi-analyzer',
+    link: '/mouse-tools/dpi-analyzer',
     icon: <Settings className="w-12 h-12 mb-4 text-primary" />,
   },
   {
     title: 'Input Lag Test',
     description: 'Measure mouse input latency.',
-    link: '/input-lag',
+    link: '/mouse-tools/input-lag',
     icon: <BarChart2 className="w-12 h-12 mb-4 text-primary" />,
   },
   {
     title: 'Sensor Precision Test',
     description: 'Test mouse sensor accuracy and precision.',
-    link: '/sensor-precision',
+    link: '/mouse-tools/sensor-precision',
     icon: <Target className="w-12 h-12 mb-4 text-primary" />,
   },
   // Links to guides can also be here if desired, or kept separate

@@ -1,20 +1,33 @@
 import { AppSidebar } from '@/components/AppSidebar';
 import { SidebarProvider, SidebarRail, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 interface MainLayoutProps {
   children: React.ReactNode;
   headerTitle: string;
   headerDescription: string;
-  showSidebar?: boolean; // New optional prop
+  showSidebar?: boolean;
+  title?: string;
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({ 
   children, 
   headerTitle, 
   headerDescription, 
-  showSidebar = true // Default to true
+  showSidebar = true,
+  title
 }) => {
+
+  useEffect(() => {
+    if (title) {
+      document.title = title;
+    } else {
+      document.title = 'TestMyRig';
+    }
+    // Optional: Clean up title on component unmount if needed
+    // return () => { document.title = 'TestMyRig'; };
+  }, [title]);
+
   const HeaderContent = (
     <header className="container mx-auto py-8">
       <div className="flex justify-between items-center mb-4">
