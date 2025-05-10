@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,6 +9,7 @@ import PlaceholderPage from "./pages/PlaceholderPage";
 import ClickSpeedTest from "./pages/ClickSpeedTest";
 import DPIAnalyzer from "./pages/DPIAnalyzer";
 import InputLagTest from "./pages/InputLagTest";
+import SensorPrecisionTest from "./pages/SensorPrecisionTest"; // Added import
 
 const queryClient = new QueryClient();
 
@@ -24,6 +24,7 @@ const App = () => (
           <Route path="/click-speed" element={<ClickSpeedTest />} />
           <Route path="/dpi-analyzer" element={<DPIAnalyzer />} />
           <Route path="/input-lag" element={<InputLagTest />} />
+          <Route path="/sensor-precision" element={<SensorPrecisionTest />} /> {/* Added route */}
           <Route path="/sensor-test" element={<PlaceholderPage />} />
           <Route path="/guide" element={<PlaceholderPage />} />
           <Route path="/help" element={<PlaceholderPage />} />

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import TestArea from '@/components/TestArea';
 import DataDisplay from '@/components/DataDisplay';
@@ -9,17 +8,19 @@ import { useToast } from '@/hooks/use-toast';
 import { Separator } from "@/components/ui/separator";
 import { AppSidebar } from '@/components/AppSidebar';
 import { SidebarProvider, SidebarInset, SidebarRail, SidebarTrigger } from "@/components/ui/sidebar";
+import { Target, Gauge, Timer, Maximize, ZoomIn, CheckSquare, ChevronsRightLeft, Scroll, Waves, Navigation } from 'lucide-react';
+import MainLayout from '@/Layout/MainLayout';
 
 const Index = () => {
   const { toast } = useToast();
   const [isTouchDevice, setIsTouchDevice] = useState(false);
-  const { 
-    current, 
-    average, 
-    max, 
-    chartData, 
-    isActive, 
-    handleMouseMove, 
+  const {
+    current,
+    average,
+    max,
+    chartData,
+    isActive,
+    handleMouseMove,
     resetTest,
     toggleTest,
   } = usePollingRate();
@@ -28,7 +29,7 @@ const Index = () => {
   useEffect(() => {
     const detectTouch = () => {
       setIsTouchDevice(
-        'ontouchstart' in window || 
+        'ontouchstart' in window ||
         navigator.maxTouchPoints > 0
       );
     };
@@ -44,106 +45,80 @@ const Index = () => {
     }
   }, [isTouchDevice, toast]);
 
-  return (
-    <SidebarProvider defaultOpen={true}>
-      <div className="flex min-h-screen w-full bg-background">
-        <AppSidebar />
-        <SidebarRail />
-        <SidebarInset className="pb-16">
-          {/* Header */}
-          <header className="container mx-auto py-8">
-            <div className="flex justify-between items-center mb-4">
-              <SidebarTrigger />
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center flex-1">
-                Mouse Polling Rate Tester
-              </h1>
-            </div>
-            <p className="text-center text-muted-foreground mt-2 max-w-2xl mx-auto">
-              Measure how many times per second your mouse reports its position to your computer
-            </p>
-          </header>
+  const pollingRateInfoData = {
+    leftCardData: {
+      title: "Understanding Mouse Polling Rate",
+      description: "Understanding the basics of polling rate",
+      mainParagraph: "The polling rate (measured in Hz) determines how often your computer checks for input from your mouse. For example, a mouse with a 1000Hz polling rate reports its position to your computer 1000 times per second (every 1ms).",
+      detailList: {
+        heading: "Common Polling Rates:",
+        items: [
+          "125 Hz - Basic office mice (8ms response time)",
+          "500 Hz - Mid-range gaming mice (2ms response time)",
+          "1000 Hz - High-end gaming mice (1ms response time)",
+          "4000+ Hz - Premium gaming mice with ultra-high polling rates"
+        ]
+      }
+    },
+    rightCardData: {
+      title: "Frequently Asked Questions",
+      description: "Common questions about mouse polling rate",
+      faqItems: [
+        { question: "Is a higher polling rate always better?", answer: "Not necessarily. While a higher polling rate can reduce input lag and improve responsiveness, it also requires more CPU resources. Most gamers find that 1000Hz offers a good balance. For casual use, 125-500Hz is typically sufficient." },
+        { question: "My polling rate seems low, what can I do?", answer: "Ensure your mouse drivers are up-to-date. Check your mouse software for polling rate settings. Some mice allow adjustments via onboard buttons. Close unnecessary background applications that might be consuming CPU resources. Try a different USB port." },
+        { question: "Why does polling rate matter for gaming?", answer: "In competitive gaming, especially fast-paced shooters and esports titles, every millisecond counts. A higher polling rate means more frequent position updates, resulting in smoother tracking and reduced input lag. This can give players a slight edge in scenarios where precise, quick movements are crucial." },
+        { question: "How accurate is this test?", answer: "This test provides a good approximation of your mouse's polling rate, but browser-based tests have limitations. Factors like CPU load, browser performance, and system resources can affect the results. For the most accurate testing, try running the test when your system isn't under heavy load." }
+      ]
+    }
+  };
 
-          {/* Ad Placeholder - Top Banner */}
-          <div className="container mx-auto mb-6">
-            <div className="ad-placeholder ad-banner">
-              Ad Banner (728×90)
+  return (
+    <MainLayout headerTitle="Mouse Polling Rate Tester" headerDescription="Measure how many times per second your mouse reports its position to your computer">
+      {/* Testing Area */}
+      <div className="mb-6">
+        {isTouchDevice ? (
+          <div className="test-area p-6 flex items-center justify-center">
+            <div className="text-center">
+              <h2 className="text-xl font-semibold mb-2">Touch Device Detected</h2>
+              <p className="text-muted-foreground">
+                Mouse polling rate testing requires a physical mouse.
+                This tool may not function correctly on touch-only devices.
+              </p>
             </div>
           </div>
-
-          <main className="container mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2">
-                {/* Testing Area */}
-                <div className="mb-6">
-                  {isTouchDevice ? (
-                    <div className="test-area p-6 flex items-center justify-center">
-                      <div className="text-center">
-                        <h2 className="text-xl font-semibold mb-2">Touch Device Detected</h2>
-                        <p className="text-muted-foreground">
-                          Mouse polling rate testing requires a physical mouse.
-                          This tool may not function correctly on touch-only devices.
-                        </p>
-                      </div>
-                    </div>
-                  ) : (
-                    <TestArea 
-                      isActive={isActive} 
-                      onMouseMove={handleMouseMove} 
-                    />
-                  )}
-                </div>
-
-                {/* Data Display */}
-                <div className="mb-6">
-                  <DataDisplay
-                    current={current}
-                    average={average}
-                    max={max}
-                    isActive={isActive}
-                    onReset={resetTest}
-                    onToggle={toggleTest}
-                  />
-                </div>
-
-                {/* Chart */}
-                <div className="mb-6">
-                  <PollingChart data={chartData} maxRate={max} />
-                </div>
-              </div>
-
-              {/* Sidebar */}
-              <div className="lg:col-span-1">
-                {/* Ad Placeholder - Sidebar */}
-                <div className="mb-6 hidden lg:block">
-                  <div className="ad-placeholder ad-sidebar">
-                    Ad Sidebar (300×600)
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <Separator className="my-8" />
-            
-            {/* Info Section */}
-            <section className="mb-8">
-              <h2 className="text-2xl font-bold mb-6">Understanding Mouse Polling Rate</h2>
-              <InfoSection />
-            </section>
-
-            {/* Ad Placeholder - Bottom Banner */}
-            <div className="mt-8">
-              <div className="ad-placeholder ad-banner">
-                Ad Banner (728×90)
-              </div>
-            </div>
-          </main>
-
-          <footer className="container mx-auto pt-8 text-center text-sm text-muted-foreground">
-            <p>© {new Date().getFullYear()} Mouse Polling Rate Tester. All rights reserved.</p>
-          </footer>
-        </SidebarInset>
+        ) : (
+          <TestArea
+            isActive={isActive}
+            onMouseMove={handleMouseMove}
+          />
+        )}
       </div>
-    </SidebarProvider>
+
+      {/* Data Display */}
+      <div className="mb-6">
+        <DataDisplay
+          current={current}
+          average={average}
+          max={max}
+          isActive={isActive}
+          onReset={resetTest}
+          onToggle={toggleTest}
+        />
+      </div>
+
+      {/* Chart */}
+      <div className="mb-6">
+        <PollingChart data={chartData} maxRate={max} />
+      </div>
+
+      <Separator className="my-8" />
+
+      {/* Info Section */}
+      <section className="mb-8">
+        <h2 className="text-2xl font-bold mb-6">Understanding Mouse Polling Rate</h2>
+        <InfoSection {...pollingRateInfoData} />
+      </section>
+    </MainLayout>
   );
 };
 

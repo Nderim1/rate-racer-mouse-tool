@@ -1,7 +1,6 @@
-
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Mouse, BarChart2, Settings, HelpCircle, Menu, Info } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { Mouse, BarChart2, Settings, HelpCircle, Menu, Info, Target } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -45,8 +44,8 @@ const menuItems = [
   },
   {
     title: "Sensor Precision",
-    path: "/sensor-test",
-    icon: Settings,
+    path: "/sensor-precision",
+    icon: Target,
     description: "Test mouse sensor accuracy and precision"
   },
   {
@@ -64,6 +63,7 @@ const menuItems = [
 ];
 
 export function AppSidebar() {
+  const location = useLocation();
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="flex items-center justify-between py-4">
@@ -79,7 +79,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild tooltip={item.description} isActive={item.path === "/"}>
+                  <SidebarMenuButton asChild tooltip={item.description} isActive={item.path === location.pathname}>
                     <Link to={item.path}>
                       <item.icon className="h-5 w-5" />
                       <span>{item.title}</span>
@@ -93,7 +93,7 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter className="p-4">
         <div className="text-xs text-muted-foreground">
-          © {new Date().getFullYear()} MouseTools
+          {new Date().getFullYear()} MouseTools
         </div>
       </SidebarFooter>
     </Sidebar>

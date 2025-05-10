@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { AppSidebar } from '@/components/AppSidebar';
 import { SidebarProvider, SidebarInset, SidebarRail, SidebarTrigger } from "@/components/ui/sidebar";
@@ -9,6 +8,7 @@ import DataDisplay from '@/components/DataDisplay';
 import { useToast } from '@/components/ui/use-toast';
 import { Timer, Clock } from 'lucide-react';
 import InputLagChart from '@/components/InputLagChart';
+import MainLayout from '@/Layout/MainLayout';
 
 const InputLagTest = () => {
   const { toast } = useToast();
@@ -86,172 +86,136 @@ const InputLagTest = () => {
     });
   };
 
+  const inputLagInfoData = {
+    leftCardData: {
+      title: "Understanding Input Lag",
+      description: "Learn about mouse input latency.",
+      mainParagraph: "Input lag, or latency, is the delay between when you move or click your mouse and when that action appears on screen. Lower input lag results in a more responsive and immediate feel, crucial for gaming and precision tasks.",
+      detailList: {
+        heading: "Factors Influencing Input Lag:",
+        items: [
+          "Mouse Hardware: Sensor quality, wireless vs. wired connection.",
+          "Display: Monitor refresh rate (Hz) and response time (ms).",
+          "System Performance: CPU/GPU load, background processes.",
+          "Software: Game engine, operating system, drivers."
+        ]
+      }
+    },
+    rightCardData: {
+      title: "Input Lag Test FAQs",
+      description: "Common questions about input lag.",
+      faqItems: [
+        { question: "How is input lag measured in this test?", answer: "This test measures your reaction time to a visual stimulus. While it includes your human reaction time, consistently low scores suggest a responsive system (mouse, PC, display). It's a relative measure of your setup's input lag performance." },
+        { question: "What's a good input lag score?", answer: "For this type of reaction test, scores under 200-250ms are generally good. Highly skilled gamers might achieve below 150ms. Remember, this includes human reaction time, which averages 200-270ms for visual stimuli." },
+        { question: "How can I reduce input lag?", answer: "Use a high refresh rate monitor (144Hz+), a wired gaming mouse, enable 'Game Mode' on your display, optimize your PC's performance, and ensure graphics drivers are up to date. In games, reduce graphics settings that heavily load the GPU." },
+        { question: "Why do my results vary?", answer: "Human reaction time naturally varies. Fatigue, focus, and even caffeine intake can affect it. System performance fluctuations can also contribute. Look at your average score over several attempts for a better picture." }
+      ]
+    }
+  };
+
   return (
-    <SidebarProvider defaultOpen={true}>
-      <div className="flex min-h-screen w-full bg-background">
-        <AppSidebar />
-        <SidebarRail />
-        <SidebarInset className="pb-16">
-          <header className="container mx-auto py-8">
-            <div className="flex justify-between items-center mb-4">
-              <SidebarTrigger />
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center flex-1">
-                Input Lag Test
-              </h1>
+    <MainLayout headerTitle="Input Lag Test" headerDescription="Click the green area as soon as it appears to measure your input lag">
+      <div className='flex flex-col gap-4'>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Timer className="h-5 w-5" />
+              Input Lag Test
+            </CardTitle>
+            <CardDescription>
+              Click the green area as soon as it appears to measure your input lag
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div
+              ref={targetRef}
+              onClick={handleClick}
+              className={`test-area cursor-pointer flex items-center justify-center transition-colors ${isActive && timestampRef.current ? 'bg-primary/30 test-area-active' : ''}`}
+              style={{ minHeight: '300px' }}
+            >
+              {isActive ? (
+                timestampRef.current ? (
+                  <div className="text-2xl font-bold">Click Now!</div>
+                ) : (
+                  <div className="text-xl">Wait for green...</div>
+                )
+              ) : (
+                <div className="text-xl">Press Start to begin</div>
+              )}
             </div>
-            <p className="text-center text-muted-foreground max-w-3xl mx-auto">
-              Measure the input lag of your mouse to determine how responsive it feels when gaming.
-            </p>
-          </header>
-
-          <main className="container mx-auto">
-            {/* Ad banner */}
-            <div className="ad-placeholder ad-banner w-full mb-8">Advertisement</div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Main content */}
-              <div className="md:col-span-2 space-y-6">
-                {/* Test area */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Timer className="h-5 w-5" />
-                      Input Lag Test
-                    </CardTitle>
-                    <CardDescription>
-                      Click the green area as soon as it appears to measure your input lag
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div
-                      ref={targetRef}
-                      onClick={handleClick}
-                      className={`test-area cursor-pointer flex items-center justify-center transition-colors ${isActive && timestampRef.current ? 'bg-primary/30 test-area-active' : ''}`}
-                      style={{ minHeight: '300px' }}
-                    >
-                      {isActive ? (
-                        timestampRef.current ? (
-                          <div className="text-2xl font-bold">Click Now!</div>
-                        ) : (
-                          <div className="text-xl">Wait for green...</div>
-                        )
-                      ) : (
-                        <div className="text-xl">Press Start to begin</div>
-                      )}
-                    </div>
-                    <div className="flex gap-4 flex-wrap">
-                      <Button
-                        onClick={handleStart}
-                        disabled={isActive}
-                        className="flex-1"
-                      >
-                        Start Test
-                      </Button>
-                      <Button
-                        onClick={handleReset}
-                        variant="outline"
-                        className="flex-1"
-                      >
-                        Reset
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Results */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Clock className="h-5 w-5" />
-                      Your Results
-                    </CardTitle>
-                    <CardDescription>
-                      Input lag test results and performance metrics
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      <DataDisplay
-                        title="Average Lag"
-                        value={averageLag !== null ? `${Math.round(averageLag)}ms` : 'N/A'}
-                        description="Lower is better"
-                      />
-                      <DataDisplay
-                        title="Best Result"
-                        value={bestLag !== null ? `${Math.round(bestLag)}ms` : 'N/A'}
-                        description="Your fastest response"
-                      />
-                      <DataDisplay
-                        title="Worst Result"
-                        value={worstLag !== null ? `${Math.round(worstLag)}ms` : 'N/A'}
-                        description="Your slowest response"
-                      />
-                    </div>
-
-                    {/* Graph */}
-                    <div className="graph-container">
-                      <InputLagChart data={results.map((value, index) => ({
-                        attempt: index + 1,
-                        lag: Math.round(value)
-                      }))} />
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Sidebar content */}
-              <div className="space-y-6">
-                {/* Ad sidebar */}
-                <div className="ad-placeholder ad-sidebar mx-auto md:mx-0">
-                  Advertisement
-                </div>
-
-                {/* Information */}
-                <InfoSection
-                  title="What is Input Lag?"
-                  items={[
-                    {
-                      title: "Definition",
-                      content: "Input lag is the delay between when you click your mouse button and when that action is registered by your computer."
-                    },
-                    {
-                      title: "Why It Matters",
-                      content: "Lower input lag gives you a competitive advantage in fast-paced games, especially FPS and competitive titles."
-                    },
-                    {
-                      title: "Good Results",
-                      content: "For gaming: < 20ms is excellent, 20-50ms is good, >50ms may be noticeable lag."
-                    }
-                  ]}
-                />
-
-                <InfoSection
-                  title="How to Improve"
-                  items={[
-                    {
-                      title: "Gaming Mouse",
-                      content: "Use a high-quality gaming mouse with a high polling rate (1000Hz or higher)."
-                    },
-                    {
-                      title: "Update Drivers",
-                      content: "Keep your mouse drivers updated to the latest version."
-                    },
-                    {
-                      title: "Reduce USB Interference",
-                      content: "Connect your mouse directly to your PC, not through a USB hub."
-                    }
-                  ]}
-                />
-              </div>
+            <div className="flex gap-4 flex-wrap">
+              <Button
+                onClick={handleStart}
+                disabled={isActive}
+                className="flex-1"
+              >
+                Start Test
+              </Button>
+              <Button
+                onClick={handleReset}
+                variant="outline"
+                className="flex-1"
+              >
+                Reset
+              </Button>
             </div>
-          </main>
+          </CardContent>
+        </Card>
 
-          <footer className="container mx-auto pt-8 text-center text-sm text-muted-foreground mt-8">
-            <p>© {new Date().getFullYear()} Mouse Tools. All rights reserved.</p>
-          </footer>
-        </SidebarInset>
+        {/* Results */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Clock className="h-5 w-5" />
+              Your Results
+            </CardTitle>
+            <CardDescription>
+              Input lag test results and performance metrics
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <DataDisplay
+                current={averageLag !== null ? Math.round(averageLag) : 0}
+                average={averageLag !== null ? Math.round(averageLag) : 0}
+                max={averageLag !== null ? Math.round(averageLag) : 0}
+                isActive={isActive}
+                onReset={handleReset}
+                onToggle={handleStart}
+              />
+              <DataDisplay
+                current={bestLag !== null ? Math.round(bestLag) : 0}
+                average={bestLag !== null ? Math.round(bestLag) : 0}
+                max={bestLag !== null ? Math.round(bestLag) : 0}
+                isActive={isActive}
+                onReset={handleReset}
+                onToggle={handleStart}
+              />
+              <DataDisplay
+                current={worstLag !== null ? Math.round(worstLag) : 0}
+                average={worstLag !== null ? Math.round(worstLag) : 0}
+                max={worstLag !== null ? Math.round(worstLag) : 0}
+                isActive={isActive}
+                onReset={handleReset}
+                onToggle={handleStart}
+              />
+            </div>
+
+            {/* Graph */}
+            <div className="graph-container">
+              <InputLagChart data={results.map((value, index) => ({
+                attempt: index + 1,
+                lag: Math.round(value)
+              }))} />
+            </div>
+          </CardContent>
+        </Card>
       </div>
-    </SidebarProvider>
+      <section className="container mx-auto p-4 md:p-8 mt-8">
+        <h2 className="text-2xl font-bold mb-6 text-center">About Input Lag</h2>
+        <InfoSection {...inputLagInfoData} />
+      </section>
+    </MainLayout>
   );
 };
 
