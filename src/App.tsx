@@ -18,6 +18,7 @@ import SharpnessTextTest from "./pages/monitor/SharpnessTextTest";
 import GhostingTest from "./pages/monitor/GhostingTest";
 import ContrastTest from "./pages/monitor/ContrastTest";
 import InputLagTestHelper from "./pages/monitor/InputLagTestHelper";
+import MonitorGuidePage from "./pages/monitor/MonitorGuide";
 import NotFound from "./pages/NotFound";
 import PlaceholderPage from "./pages/PlaceholderPage";
 import ClickSpeedTest from "./pages/mouse/ClickSpeedTest";
@@ -25,6 +26,7 @@ import DPIAnalyzer from "./pages/mouse/DPIAnalyzer";
 import InputLagTest from "./pages/mouse/InputLagTest";
 import MouseGuide from "./pages/MouseGuide";
 import RecommendedMicePage from "./pages/RecommendedMicePage";
+import KeyboardGuidePage from "./pages/keyboard/KeyboardGuide";
 
 const queryClient = new QueryClient();
 
@@ -63,8 +65,12 @@ const App = () => (
           <Route path="/monitor-tools/contrast-test" element={<ContrastTest />} />
           <Route path="/monitor-tools/input-lag-test-helper" element={<InputLagTestHelper />} />
 
-          {/* Utility/Resource Routes */}
+          {/* Guides */}
           <Route path="/mouse-guide" element={<MouseGuide />} />
+          <Route path="/keyboard-guide" element={<KeyboardGuidePage />} />
+          <Route path="/monitor-guide" element={<MonitorGuidePage />} />
+
+          {/* Utility/Resource Routes */}
           <Route path="/recommended-mice" element={<RecommendedMicePage />} />
 
           {/* Fallback/Other Routes */}

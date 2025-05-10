@@ -106,8 +106,8 @@ const ScreenUniformityTest: React.FC = () => {
   };
 
   return (
-    <MainLayout 
-      title="Screen Uniformity Test - RateRacer"
+    <MainLayout
+      title="Screen Uniformity Test - TestMyRig"
       headerTitle="Screen Uniformity Test"
       headerDescription="Check for color and brightness inconsistencies across your monitor."
     >

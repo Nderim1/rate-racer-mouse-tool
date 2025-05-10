@@ -3,6 +3,7 @@ import MainLayout from '@/Layout/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart, Star, Zap, DollarSign, ShieldCheck } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 interface MouseRecommendation {
   id: string;
@@ -11,6 +12,65 @@ interface MouseRecommendation {
   imageUrl?: string; // Optional image URL
   features: string[];
   amazonLink: string; // Placeholder for Amazon affiliate link
+}
+
+// Schema Interfaces
+interface OfferSchemaType {
+  "@type": "Offer";
+  url: string;
+  priceCurrency: string;
+  availability: string;
+  seller: {
+    "@type": "Organization";
+    name: string;
+  };
+}
+
+interface BrandSchemaType {
+  "@type": "Brand";
+  name: string;
+}
+
+interface ProductSchemaType {
+  "@type": "Product";
+  name: string;
+  description: string;
+  category: string;
+  url: string;
+  offers: OfferSchemaType;
+  image?: string;
+  brand?: BrandSchemaType;
+}
+
+interface ListItemSchemaType {
+  "@type": "ListItem";
+  position: number;
+  item: ProductSchemaType;
+}
+
+interface ItemListSchemaType {
+  "@type": "ItemList";
+  itemListElement: ListItemSchemaType[];
+}
+
+interface PublisherInfoSchemaType {
+  "@type": "Organization";
+  name: string;
+  logo: {
+    "@type": "ImageObject";
+    url: string;
+  };
+}
+
+interface CollectionPageSchemaType {
+  "@context": "https://schema.org";
+  "@type": "CollectionPage";
+  name: string;
+  description: string;
+  url: string;
+  image?: string;
+  publisher: PublisherInfoSchemaType;
+  mainEntity: ItemListSchemaType;
 }
 
 const recommendedMiceData: MouseRecommendation[] = [
@@ -73,9 +133,104 @@ const mouseCategories = [
   { id: 'budget', title: 'Best Budget-Friendly Mice', icon: DollarSign, data: recommendedMiceData.filter(m => m.category === 'Budget Gaming') }, // Can refine this category later
 ];
 
+// Helper function to infer brand from mouse name
+const inferBrand = (mouseName: string): string | undefined => {
+  const lowerName = mouseName.toLowerCase();
+  if (lowerName.includes('logitech')) return 'Logitech';
+  if (lowerName.includes('razer')) return 'Razer';
+  if (lowerName.includes('anker')) return 'Anker';
+  if (lowerName.includes('redragon')) return 'Redragon';
+  // Add other brands as needed
+  return undefined;
+};
+
 const RecommendedMicePage: React.FC = () => {
+  const pageTitle = "Recommended Mice - Top Picks for Gaming & Productivity | TestMyRig";
+  const pageDescription = "Discover our curated list of top-rated mice for gaming, ergonomics, and budget-conscious users. Features, pros & cons, and direct links to buy.";
+  const pageUrl = "https://testmyrig.com/recommended-mice";
+  const ogImageUrl = "https://testmyrig.com/images/og-recommended-mice.png"; // Placeholder
+  const siteName = "TestMyRig";
+  const publisherLogoUrl = "https://testmyrig.com/images/logo.png"; // Placeholder
+
+  const productListItems: ListItemSchemaType[] = recommendedMiceData.map((mouse, index) => {
+    const brandName = inferBrand(mouse.name);
+    const productSchema: ProductSchemaType = {
+      "@type": "Product",
+      "name": mouse.name,
+      "description": mouse.features.join(', '),
+      "category": mouse.category,
+      "url": mouse.amazonLink,
+      "offers": {
+        "@type": "Offer",
+        "url": mouse.amazonLink,
+        "priceCurrency": "USD", // Assuming USD, price can't be specified without actual data
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Amazon.com"
+        }
+      }
+    };
+    if (mouse.imageUrl && !mouse.imageUrl.includes('via.placeholder.com')) {
+      productSchema.image = mouse.imageUrl;
+    }
+    if (brandName) {
+      productSchema.brand = {
+        "@type": "Brand",
+        "name": brandName
+      };
+    }
+    return {
+      "@type": "ListItem",
+      "position": index + 1,
+      "item": productSchema
+    };
+  });
+
+  const collectionPageSchema: CollectionPageSchemaType = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": pageTitle,
+    "description": pageDescription,
+    "url": pageUrl,
+    "image": ogImageUrl,
+    "publisher": {
+      "@type": "Organization",
+      "name": siteName,
+      "logo": {
+        "@type": "ImageObject",
+        "url": publisherLogoUrl
+      }
+    },
+    "mainEntity": {
+      "@type": "ItemList",
+      "itemListElement": productListItems
+    }
+  };
+
   return (
     <MainLayout headerTitle="Recommended Mice" headerDescription="Curated list of mice for various needs, with links for purchase.">
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+        <link rel="canonical" href={pageUrl} />
+        {/* Open Graph Tags */}
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:url" content={pageUrl} />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:site_name" content={siteName} />
+        {/* Twitter Card Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={pageDescription} />
+        <meta name="twitter:image" content={ogImageUrl} />
+        {/* JSON-LD Structured Data */}
+        <script type="application/ld+json">
+          {JSON.stringify(collectionPageSchema)}
+        </script>
+      </Helmet>
       <div className="space-y-8">
         <Card className="bg-secondary/50 border-primary/50">
             <CardHeader>

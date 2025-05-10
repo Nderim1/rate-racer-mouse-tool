@@ -120,6 +120,18 @@ export const utilityItems: MenuItem[] = [
     description: 'Learn about mouse technologies and how to choose one.'
   },
   {
+    title: 'Keyboard Guide',
+    path: '/keyboard-guide',
+    icon: BookOpen,
+    description: 'Learn about keyboard technologies and how to choose one.'
+  },
+  {
+    title: 'Monitor Guide',
+    path: '/monitor-guide',
+    icon: BookOpen,
+    description: 'Learn about monitor technologies and how to choose one.'
+  },
+  {
     title: 'Recommended Mice',
     path: '/recommended-mice',
     icon: Award,

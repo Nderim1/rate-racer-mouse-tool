@@ -2,6 +2,7 @@ import React from 'react';
 import MainLayout from '@/Layout/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { BookOpen, Disc3, Zap, Grip, ChevronRight, Activity, Settings2 } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const guideSections = [
   {
@@ -76,8 +77,70 @@ const guideSections = [
 ];
 
 const MouseGuidePage: React.FC = () => {
+  const pageTitle = "Mouse Guide: Sensors, DPI, Polling Rate, Ergonomics | TestMyRig";
+  const pageDescription = "Deep dive into mouse technology: optical vs. laser sensors, DPI/CPI, polling rates, wired vs. wireless, grip styles (palm, claw, fingertip), and more. Choose the best mouse with TestMyRig.";
+  const pageUrl = "https://testmyrig.com/mouse-guide";
+  const ogImageUrl = "https://testmyrig.com/images/og-mouse-guide.png"; // Placeholder
+  const siteName = "TestMyRig";
+  const publisherLogoUrl = "https://testmyrig.com/images/logo.png"; // Placeholder
+  const datePublished = "2025-05-10T19:00:00Z"; // Example publish date
+  const dateModified = "2025-05-10T19:00:00Z"; // Example modification date
+
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": pageTitle,
+    "description": pageDescription,
+    "image": [
+      ogImageUrl
+     ],
+    "datePublished": datePublished,
+    "dateModified": dateModified,
+    "author": {
+      "@type": "Organization",
+      "name": "TestMyRig Team"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": siteName,
+      "logo": {
+        "@type": "ImageObject",
+        "url": publisherLogoUrl
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": pageUrl
+    }
+  };
+
   return (
     <MainLayout headerTitle="Comprehensive Mouse Guide" headerDescription="Everything you need to know about mice to make an informed decision.">
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+        <link rel="canonical" href={pageUrl} />
+        {/* Open Graph Tags */}
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:url" content={pageUrl} />
+        <meta property="og:type" content="article" />
+        <meta property="article:published_time" content={datePublished} />
+        <meta property="article:modified_time" content={dateModified} />
+        <meta property="article:author" content="TestMyRig Team" />
+        <meta property="article:section" content="Technology Guides" />
+        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:site_name" content={siteName} />
+        {/* Twitter Card Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={pageDescription} />
+        <meta name="twitter:image" content={ogImageUrl} />
+        {/* JSON-LD Structured Data */}
+        <script type="application/ld+json">
+          {JSON.stringify(articleSchema)}
+        </script>
+      </Helmet>
       <div className="space-y-8">
         {guideSections.map((section) => (
           <Card key={section.id} id={section.id}>

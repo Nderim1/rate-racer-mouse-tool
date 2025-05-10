@@ -90,8 +90,8 @@ const SharpnessTextTest: React.FC = () => {
   ];
 
   return (
-    <MainLayout 
-      title="Sharpness & Text Clarity Test - RateRacer"
+    <MainLayout
+      title="Sharpness & Text Clarity Test - TestMyRig"
       headerTitle="Sharpness & Text Clarity Test"
       headerDescription="Evaluate your monitor's sharpness for clear text and images."
     >
@@ -146,7 +146,7 @@ const SharpnessTextTest: React.FC = () => {
               ))}
             </CardContent>
           </Card>
-          
+
           {!isFullScreen && <InfoSection {...testPatternsInfo} />}
         </div>
       </div>

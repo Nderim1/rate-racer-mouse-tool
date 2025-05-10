@@ -27,8 +27,8 @@ const InputLagTestHelper: React.FC = () => {
     if (!fullScreenRef.current) return;
     const elementToFullscreen = fullScreenRef.current.querySelector('#flash-area-container') || fullScreenRef.current;
     if (!document.fullscreenElement) {
-      try { 
-        await elementToFullscreen.requestFullscreen(); 
+      try {
+        await elementToFullscreen.requestFullscreen();
         if (!isRunning) setIsRunning(true); // Auto-start on full screen
       }
       catch (err) { alert(`Error enabling full-screen: ${(err as Error).message}`); }
@@ -39,7 +39,7 @@ const InputLagTestHelper: React.FC = () => {
       }
     }
   };
-  
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => event.key === 'Escape' && document.fullscreenElement && setIsFullScreen(false);
     window.addEventListener('keydown', handleKeyDown);
@@ -108,8 +108,8 @@ const InputLagTestHelper: React.FC = () => {
   };
 
   return (
-    <MainLayout 
-      title="Input Lag Test Helper - RateRacer"
+    <MainLayout
+      title="Input Lag Test Helper - TestMyRig"
       headerTitle="Input Lag Test (Helper Tool)"
       headerDescription="A visual aid for estimating input lag (requires external camera)."
     >

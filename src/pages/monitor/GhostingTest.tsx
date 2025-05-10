@@ -40,7 +40,7 @@ const GhostingTest: React.FC = () => {
       }
     }
   };
-  
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => event.key === 'Escape' && document.fullscreenElement && setIsFullScreen(false);
     window.addEventListener('keydown', handleKeyDown);
@@ -129,14 +129,14 @@ const GhostingTest: React.FC = () => {
   };
 
   return (
-    <MainLayout 
-      title="Ghosting & Motion Blur Test - RateRacer"
+    <MainLayout
+      title="Ghosting & Motion Blur Test - TestMyRig"
       headerTitle="Ghosting / Motion Blur Test"
       headerDescription="Visually assess your monitor's motion performance."
     >
       <div ref={fullScreenRef} className={`${isFullScreen ? 'fixed inset-0 z-[100] bg-gray-800' : 'relative'}`}>
         {isFullScreen && (
-           <div className='absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center p-4' id="animation-container">
+          <div className='absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center p-4' id="animation-container">
             <div ref={animationAreaRef} className="w-full h-1/2 bg-gray-700 relative overflow-hidden">
               <div ref={movingObjectRef} style={{ transform: `translateX(${position}px)`, backgroundColor: '#00FF00' }} className="w-16 h-16 absolute top-1/2 -translate-y-1/2"></div>
             </div>
@@ -161,13 +161,13 @@ const GhostingTest: React.FC = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div id="animation-container" className='border rounded-md p-4'>
-                    <div ref={animationAreaRef} className="w-full h-48 bg-gray-200 dark:bg-gray-700 relative overflow-hidden rounded">
-                      <div ref={movingObjectRef} style={{ transform: `translateX(${position}px)`, backgroundColor: '#00DD00' }} className="w-12 h-12 absolute top-1/2 -translate-y-1/2 shadow-lg"></div>
-                    </div>
+                  <div ref={animationAreaRef} className="w-full h-48 bg-gray-200 dark:bg-gray-700 relative overflow-hidden rounded">
+                    <div ref={movingObjectRef} style={{ transform: `translateX(${position}px)`, backgroundColor: '#00DD00' }} className="w-12 h-12 absolute top-1/2 -translate-y-1/2 shadow-lg"></div>
+                  </div>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 items-center">
-                  <Button 
-                    onClick={() => setIsRunning(!isRunning)} 
+                  <Button
+                    onClick={() => setIsRunning(!isRunning)}
                     variant={isRunning ? "destructive" : "default"}
                     className='min-w-[180px] sm:w-auto'
                   >

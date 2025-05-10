@@ -109,34 +109,34 @@ const ColorBandingTest: React.FC = () => {
   };
 
   return (
-    <MainLayout 
-      title="Color Banding & Gradient Test - RateRacer"
+    <MainLayout
+      title="Color Banding & Gradient Test - TestMyRig"
       headerTitle="Color Banding / Gradient Test"
       headerDescription="Test your monitor's ability to display smooth color gradients."
     >
       <div ref={fullScreenRef} className={`relative ${isFullScreen ? 'fixed inset-0 z-[100] bg-background' : ''}`}>
-        
-        <div 
-          id="gradient-display-area" 
+
+        <div
+          id="gradient-display-area"
           className="w-full h-[300px] md:h-[500px] rounded-md transition-all duration-300 ease-in-out mb-6 border"
           style={{
             background: currentGradient.css,
-            height: isFullScreen ? '100vh' : undefined, 
+            height: isFullScreen ? '100vh' : undefined,
           }}
         />
 
-        <div 
+        <div
           ref={controlsRef}
           className={`p-1 md:p-0 ${isFullScreen ? 'fixed top-4 left-1/2 -translate-x-1/2 z-[150] bg-background/80 backdrop-blur-sm p-4 rounded-lg shadow-xl' : 'space-y-6'}`}
         >
           <Card className={`${isFullScreen ? 'w-auto' : 'w-full'}`}>
             <CardHeader className={`${isFullScreen ? 'pb-2 pt-3 px-4' : ''}`}>
-              <CardTitle  className={`${isFullScreen ? 'text-lg' : ''}`}>Controls</CardTitle>
+              <CardTitle className={`${isFullScreen ? 'text-lg' : ''}`}>Controls</CardTitle>
             </CardHeader>
             <CardContent className={`flex ${isFullScreen ? 'flex-row items-center gap-3 px-4 pb-3' : 'flex-col gap-4'}`}>
               <div className={` ${isFullScreen ? '' : 'w-full'}`}>
-                <Select 
-                  value={currentGradient.name} 
+                <Select
+                  value={currentGradient.name}
                   onValueChange={(value) => {
                     const selected = gradientPatterns.find(g => g.name === value);
                     if (selected) setCurrentGradient(selected);
@@ -145,7 +145,7 @@ const ColorBandingTest: React.FC = () => {
                   <SelectTrigger className={`w-full ${isFullScreen ? 'min-w-[200px]' : ''} focus:ring-2 focus:ring-primary`}>
                     <SelectValue placeholder="Select a gradient" />
                   </SelectTrigger>
-                  <SelectContent className={`${isFullScreen ? 'z-[200]' : 'z-[50]'}`}> 
+                  <SelectContent className={`${isFullScreen ? 'z-[200]' : 'z-[50]'}`}>
                     {gradientPatterns.map(gradient => (
                       <SelectItem key={gradient.name} value={gradient.name}>
                         {gradient.name}
@@ -160,7 +160,7 @@ const ColorBandingTest: React.FC = () => {
               </Button>
             </CardContent>
           </Card>
-          
+
           {!isFullScreen && <InfoSection {...colorBandingTestInfo} />}
         </div>
 

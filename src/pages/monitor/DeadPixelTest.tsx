@@ -115,7 +115,7 @@ const DeadPixelTest: React.FC = () => {
 
   return (
     <MainLayout
-      title="Dead Pixel & Stuck Pixel Test - RateRacer"
+      title="Dead Pixel & Stuck Pixel Test - TestMyRig"
       headerTitle="Dead Pixel / Stuck Pixel Test"
       headerDescription="Check your screen for dead, stuck, or bright pixels using full-screen solid colors."
     >

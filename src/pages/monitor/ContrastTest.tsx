@@ -57,7 +57,7 @@ const ContrastTest: React.FC = () => {
       }
     }
   };
-  
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => event.key === 'Escape' && document.fullscreenElement && setIsFullScreen(false);
     window.addEventListener('keydown', handleKeyDown);
@@ -107,8 +107,8 @@ const ContrastTest: React.FC = () => {
   };
 
   return (
-    <MainLayout 
-      title="Contrast Ratio Test - RateRacer"
+    <MainLayout
+      title="Contrast Ratio Test - TestMyRig"
       headerTitle="Visual Contrast Ratio Test"
       headerDescription="Check your monitor's black and white level differentiation."
     >
