@@ -4,8 +4,8 @@ import { AppSidebar } from '@/components/AppSidebar';
 import { SidebarProvider, SidebarInset, SidebarRail, SidebarTrigger } from "@/components/ui/sidebar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { InfoSection } from '@/components/InfoSection';
-import { DataDisplay } from '@/components/DataDisplay';
+import InfoSection from '@/components/InfoSection';
+import DataDisplay from '@/components/DataDisplay';
 import { useToast } from '@/components/ui/use-toast';
 import { Timer, Clock } from 'lucide-react';
 import InputLagChart from '@/components/InputLagChart';
@@ -42,7 +42,7 @@ const InputLagTest = () => {
 
     // Random delay between 1-5 seconds
     const delay = Math.random() * 4000 + 1000;
-    
+
     setTimeout(() => {
       if (targetRef.current) {
         timestampRef.current = performance.now();
@@ -53,7 +53,7 @@ const InputLagTest = () => {
   // Handle click on target
   const handleClick = () => {
     if (!isActive) return;
-    
+
     if (!timestampRef.current) {
       toast({
         title: "Too early!",
@@ -66,20 +66,20 @@ const InputLagTest = () => {
 
     const now = performance.now();
     const lagTime = now - timestampRef.current;
-    
+
     // Update results
     const newResults = [...results, lagTime];
     setResults(newResults);
-    
+
     // Calculate statistics
     const avg = newResults.reduce((sum, val) => sum + val, 0) / newResults.length;
     setAverageLag(avg);
     setBestLag(Math.min(...newResults));
     setWorstLag(Math.max(...newResults));
-    
+
     clickCounterRef.current += 1;
     setIsActive(false);
-    
+
     toast({
       title: "Input lag recorded",
       description: `Your reaction time was ${Math.round(lagTime)}ms`,
@@ -107,7 +107,7 @@ const InputLagTest = () => {
           <main className="container mx-auto">
             {/* Ad banner */}
             <div className="ad-placeholder ad-banner w-full mb-8">Advertisement</div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Main content */}
               <div className="md:col-span-2 space-y-6">
@@ -123,11 +123,11 @@ const InputLagTest = () => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div 
+                    <div
                       ref={targetRef}
                       onClick={handleClick}
                       className={`test-area cursor-pointer flex items-center justify-center transition-colors ${isActive && timestampRef.current ? 'bg-primary/30 test-area-active' : ''}`}
-                      style={{minHeight: '300px'}}
+                      style={{ minHeight: '300px' }}
                     >
                       {isActive ? (
                         timestampRef.current ? (
@@ -187,7 +187,7 @@ const InputLagTest = () => {
                         description="Your slowest response"
                       />
                     </div>
-                    
+
                     {/* Graph */}
                     <div className="graph-container">
                       <InputLagChart data={results.map((value, index) => ({
@@ -224,7 +224,7 @@ const InputLagTest = () => {
                     }
                   ]}
                 />
-                
+
                 <InfoSection
                   title="How to Improve"
                   items={[
