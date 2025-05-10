@@ -11,10 +11,10 @@ interface MainLayoutProps {
   showAds?: boolean;
 }
 
-const MainLayout: React.FC<MainLayoutProps> = ({ 
-  children, 
-  headerTitle, 
-  headerDescription, 
+const MainLayout: React.FC<MainLayoutProps> = ({
+  children,
+  headerTitle,
+  headerDescription,
   showSidebar = true,
   title,
   showAds = false
@@ -85,6 +85,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
       )}
       <footer className="container mx-auto pt-8 text-center text-sm text-muted-foreground mt-8">
         <p>&copy; {new Date().getFullYear()} TestMyRig.com. All rights reserved.</p>
+        <p>Powered by <a href="https://drawcharts.xyz/" target="_blank" rel="noopener noreferrer">drawcharts</a></p>
       </footer>
     </>
   );
