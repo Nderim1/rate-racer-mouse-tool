@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import PlaceholderPage from "./pages/PlaceholderPage";
 import ClickSpeedTest from "./pages/ClickSpeedTest";
 import DPIAnalyzer from "./pages/DPIAnalyzer";
+import InputLagTest from "./pages/InputLagTest";
 
 const queryClient = new QueryClient();
 
@@ -22,7 +23,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/click-speed" element={<ClickSpeedTest />} />
           <Route path="/dpi-analyzer" element={<DPIAnalyzer />} />
-          <Route path="/input-lag" element={<PlaceholderPage />} />
+          <Route path="/input-lag" element={<InputLagTest />} />
           <Route path="/sensor-test" element={<PlaceholderPage />} />
           <Route path="/guide" element={<PlaceholderPage />} />
           <Route path="/help" element={<PlaceholderPage />} />
