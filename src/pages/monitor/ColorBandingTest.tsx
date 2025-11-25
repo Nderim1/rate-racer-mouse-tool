@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '@/components/SEO';
+import { generateWebPageSchema, generateBreadcrumbSchema } from '@/utils/structuredData';
 import MainLayout from '@/Layout/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -109,80 +110,89 @@ const ColorBandingTest: React.FC = () => {
     }
   };
 
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      generateWebPageSchema(
+        'Monitor Color Banding & Gradient Test',
+        'Test your monitor for color banding with our gradient test. Identify issues with color depth and smooth transitions on your display. Ensure optimal visual quality.',
+        'https://testmyrig.com/monitor-tools/color-banding-test'
+      ),
+      generateBreadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Monitor Tools', url: '/monitor-tools' },
+        { name: 'Color Banding Test', url: '/monitor-tools/color-banding-test' }
+      ])
+    ]
+  };
+
   return (
-    <MainLayout
-      title="Color Banding & Gradient Test - TestMyRig"
-      headerTitle="Color Banding / Gradient Test"
-      headerDescription="Test your monitor's ability to display smooth color gradients."
-    >
-      <Helmet>
-        <title>Monitor Color Banding & Gradient Test | TestMyRig</title>
-        <meta name="description" content="Test your monitor for color banding with our gradient test. Identify issues with color depth and smooth transitions on your display. Ensure optimal visual quality." />
-        <link rel="canonical" href="https://testmyrig.com/monitor-tools/color-banding-test" />
-        <meta property="og:title" content="Monitor Color Banding & Gradient Test | TestMyRig" />
-        <meta property="og:description" content="Test your monitor for color banding with our gradient test. Identify issues with color depth and smooth transitions on your display." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://testmyrig.com/monitor-tools/color-banding-test" />
-        <meta property="og:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
-        <meta property="og:site_name" content="TestMyRig" />
+    <>
+      <SEO
+        title="Monitor Color Banding & Gradient Test"
+        description="Test your monitor for color banding with our gradient test. Identify issues with color depth and smooth transitions on your display. Ensure optimal visual quality."
+        canonical="https://testmyrig.com/monitor-tools/color-banding-test"
+        keywords="color banding test, gradient test, monitor test, color depth test, display quality"
+        schema={schema}
+      />
+      <MainLayout
+        title="Color Banding & Gradient Test - TestMyRig"
+        headerTitle="Color Banding / Gradient Test"
+        headerDescription="Test your monitor's ability to display smooth color gradients."
+      >
+        <div ref={fullScreenRef} className={`relative ${isFullScreen ? 'fixed inset-0 z-[100] bg-background' : ''}`}>
 
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Monitor Color Banding & Gradient Test | TestMyRig" />
-        <meta name="twitter:description" content="Test your monitor for color banding with our gradient test. Identify issues with color depth and smooth transitions on your display." />
-        <meta name="twitter:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
-      </Helmet>
-      <div ref={fullScreenRef} className={`relative ${isFullScreen ? 'fixed inset-0 z-[100] bg-background' : ''}`}>
+          <div
+            id="gradient-display-area"
+            className="w-full h-[300px] md:h-[500px] rounded-md transition-all duration-300 ease-in-out mb-6 border"
+            style={{
+              background: currentGradient.css,
+              height: isFullScreen ? '100vh' : undefined,
+            }}
+          />
 
-        <div
-          id="gradient-display-area"
-          className="w-full h-[300px] md:h-[500px] rounded-md transition-all duration-300 ease-in-out mb-6 border"
-          style={{
-            background: currentGradient.css,
-            height: isFullScreen ? '100vh' : undefined,
-          }}
-        />
+          <div
+            ref={controlsRef}
+            className={`p-1 md:p-0 ${isFullScreen ? 'fixed top-4 left-1/2 -translate-x-1/2 z-[150] bg-background/80 backdrop-blur-sm p-4 rounded-lg shadow-xl' : 'space-y-6'}`}
+          >
+            <Card className={`${isFullScreen ? 'w-auto' : 'w-full'}`}>
+              <CardHeader className={`${isFullScreen ? 'pb-2 pt-3 px-4' : ''}`}>
+                <CardTitle className={`${isFullScreen ? 'text-lg' : ''}`}>Controls</CardTitle>
+              </CardHeader>
+              <CardContent className={`flex ${isFullScreen ? 'flex-row items-center gap-3 px-4 pb-3' : 'flex-col gap-4'}`}>
+                <div className={` ${isFullScreen ? '' : 'w-full'}`}>
+                  <Select
+                    value={currentGradient.name}
+                    onValueChange={(value) => {
+                      const selected = gradientPatterns.find(g => g.name === value);
+                      if (selected) setCurrentGradient(selected);
+                    }}
+                  >
+                    <SelectTrigger className={`w-full ${isFullScreen ? 'min-w-[200px]' : ''} focus:ring-2 focus:ring-primary`}>
+                      <SelectValue placeholder="Select a gradient" />
+                    </SelectTrigger>
+                    <SelectContent className={`${isFullScreen ? 'z-[200]' : 'z-[50]'}`}>
+                      {gradientPatterns.map(gradient => (
+                        <SelectItem key={gradient.name} value={gradient.name}>
+                          {gradient.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Button onClick={toggleFullScreen} variant="outline" className={`w-full ${isFullScreen ? 'w-auto' : ''}`}>
+                  {isFullScreen ? <Minimize className="mr-2 h-4 w-4" /> : <Maximize className="mr-2 h-4 w-4" />}
+                  {isFullScreen ? 'Exit' : 'Toggle Full Screen'}
+                </Button>
+              </CardContent>
+            </Card>
 
-        <div
-          ref={controlsRef}
-          className={`p-1 md:p-0 ${isFullScreen ? 'fixed top-4 left-1/2 -translate-x-1/2 z-[150] bg-background/80 backdrop-blur-sm p-4 rounded-lg shadow-xl' : 'space-y-6'}`}
-        >
-          <Card className={`${isFullScreen ? 'w-auto' : 'w-full'}`}>
-            <CardHeader className={`${isFullScreen ? 'pb-2 pt-3 px-4' : ''}`}>
-              <CardTitle className={`${isFullScreen ? 'text-lg' : ''}`}>Controls</CardTitle>
-            </CardHeader>
-            <CardContent className={`flex ${isFullScreen ? 'flex-row items-center gap-3 px-4 pb-3' : 'flex-col gap-4'}`}>
-              <div className={` ${isFullScreen ? '' : 'w-full'}`}>
-                <Select
-                  value={currentGradient.name}
-                  onValueChange={(value) => {
-                    const selected = gradientPatterns.find(g => g.name === value);
-                    if (selected) setCurrentGradient(selected);
-                  }}
-                >
-                  <SelectTrigger className={`w-full ${isFullScreen ? 'min-w-[200px]' : ''} focus:ring-2 focus:ring-primary`}>
-                    <SelectValue placeholder="Select a gradient" />
-                  </SelectTrigger>
-                  <SelectContent className={`${isFullScreen ? 'z-[200]' : 'z-[50]'}`}>
-                    {gradientPatterns.map(gradient => (
-                      <SelectItem key={gradient.name} value={gradient.name}>
-                        {gradient.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <Button onClick={toggleFullScreen} variant="outline" className={`w-full ${isFullScreen ? 'w-auto' : ''}`}>
-                {isFullScreen ? <Minimize className="mr-2 h-4 w-4" /> : <Maximize className="mr-2 h-4 w-4" />}
-                {isFullScreen ? 'Exit' : 'Toggle Full Screen'}
-              </Button>
-            </CardContent>
-          </Card>
+            {!isFullScreen && <InfoSection {...colorBandingTestInfo} />}
+          </div>
 
-          {!isFullScreen && <InfoSection {...colorBandingTestInfo} />}
         </div>
-
-      </div>
-    </MainLayout>
+      </MainLayout>
+    </>
   );
 };
 

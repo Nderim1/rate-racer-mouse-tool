@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '@/components/SEO';
+import { generateWebPageSchema, generateBreadcrumbSchema } from '@/utils/structuredData';
 import MainLayout from '@/Layout/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -45,7 +46,7 @@ const usQwertyLayout: KeyProps[][] = [
   [
     { display: 'Ctrl', code: 'ControlLeft', size: 'medium', flexGrow: 1.5 }, { display: 'Win', code: 'MetaLeft', size: 'small', flexGrow: 1.25 },
     { display: 'Alt', code: 'AltLeft', size: 'medium', flexGrow: 1.25 }, { display: 'Space', code: 'Space', size: 'xxlarge', flexGrow: 8 },
-    { display: 'Alt', code: 'AltRight', size: 'medium', flexGrow: 1.25 }, { display: 'Win', code: 'MetaRight', size: 'small', flexGrow: 1.25 }, 
+    { display: 'Alt', code: 'AltRight', size: 'medium', flexGrow: 1.25 }, { display: 'Win', code: 'MetaRight', size: 'small', flexGrow: 1.25 },
     { display: 'Menu', code: 'ContextMenu', size: 'small', flexGrow: 1.25 }, { display: 'Ctrl', code: 'ControlRight', size: 'medium', flexGrow: 1.5 },
   ],
 ];
@@ -105,7 +106,7 @@ const KeyboardTester: React.FC = () => {
   const [typedText, setTypedText] = useState<string>('');
 
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    event.preventDefault(); 
+    event.preventDefault();
     setPressedKeys((prev) => new Set(prev).add(event.code));
     setLastPressedKeyInfo({ key: event.key, code: event.code, keyCode: event.keyCode });
 
@@ -114,8 +115,8 @@ const KeyboardTester: React.FC = () => {
     } else if (event.key === 'Enter') {
       setTypedText((prev) => prev + '\n');
     } else if (event.key === 'Tab') {
-      setTypedText((prev) => prev + '    '); 
-    } else if (event.key.length === 1) { 
+      setTypedText((prev) => prev + '    ');
+    } else if (event.key.length === 1) {
       setTypedText((prev) => prev + event.key);
     }
   }, []);
@@ -145,117 +146,126 @@ const KeyboardTester: React.FC = () => {
   };
 
   const getKeySizeClasses = (key: KeyProps): string => {
-    const baseClasses = 'min-h-[3rem] md:min-h-[3.5rem]'; 
-    const flexBasis = 'flex-basis-[3rem] md:flex-basis-[3.5rem]'; 
-    
+    const baseClasses = 'min-h-[3rem] md:min-h-[3.5rem]';
+    const flexBasis = 'flex-basis-[3rem] md:flex-basis-[3.5rem]';
+
     if (key.flexGrow) {
       return `${baseClasses} flex-grow-[${key.flexGrow}] ${flexBasis}`;
     }
 
     switch (key.size) {
-      case 'small':   return `${baseClasses} flex-grow-[1.25] ${flexBasis}`;
-      case 'medium':  return `${baseClasses} flex-grow-[1.5] ${flexBasis}`;
-      case 'large':   return `${baseClasses} flex-grow-[2] ${flexBasis}`;
-      case 'xlarge':  return `${baseClasses} flex-grow-[2.5] ${flexBasis}`;
+      case 'small': return `${baseClasses} flex-grow-[1.25] ${flexBasis}`;
+      case 'medium': return `${baseClasses} flex-grow-[1.5] ${flexBasis}`;
+      case 'large': return `${baseClasses} flex-grow-[2] ${flexBasis}`;
+      case 'xlarge': return `${baseClasses} flex-grow-[2.5] ${flexBasis}`;
       case 'xxlarge': return `${baseClasses} flex-grow-[8] ${flexBasis}`;
-      default:        return `${baseClasses} flex-grow ${flexBasis}`;
+      default: return `${baseClasses} flex-grow ${flexBasis}`;
     }
   };
 
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      generateWebPageSchema(
+        'Online Keyboard Tester - Check Your Keyboard Keys',
+        'Test your keyboard online with our interactive keyboard tester. Visualize key presses, check for dead or malfunctioning keys, and see key event data.',
+        'https://testmyrig.com/keyboard-tools/keyboard-tester'
+      ),
+      generateBreadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Keyboard Tools', url: '/keyboard-tools' },
+        { name: 'Keyboard Tester', url: '/keyboard-tools/keyboard-tester' }
+      ])
+    ]
+  };
+
   return (
-    <MainLayout
-      title="Keyboard Tester - TestMyRig"
-      headerTitle="Keyboard Tester"
-      headerDescription="Visualize your key presses in real-time. Check if all your keyboard keys are working correctly."
-    >
-      <Helmet>
-        <title>Online Keyboard Tester - Check Your Keyboard Keys | TestMyRig</title>
-        <meta name="description" content="Test your keyboard online with our interactive keyboard tester. Visualize key presses, check for dead or malfunctioning keys, and see key event data." />
-        <link rel="canonical" href="https://testmyrig.com/keyboard-tools/keyboard-tester" />
-        <meta property="og:title" content="Online Keyboard Tester - Check Your Keyboard Keys | TestMyRig" />
-        <meta property="og:description" content="Test your keyboard online with our interactive keyboard tester. Visualize key presses and check for malfunctioning keys." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://testmyrig.com/keyboard-tools/keyboard-tester" />
-        <meta property="og:image" content="https://testmyrig.com/images/og-keyboard-tools.png" /> {/* Using keyboard category OG image */}
-        <meta property="og:site_name" content="TestMyRig" />
+    <>
+      <SEO
+        title="Online Keyboard Tester - Check Your Keyboard Keys"
+        description="Test your keyboard online with our interactive keyboard tester. Visualize key presses, check for dead or malfunctioning keys, and see key event data."
+        canonical="https://testmyrig.com/keyboard-tools/keyboard-tester"
+        keywords="keyboard tester, test keyboard online, check keyboard keys, keyboard test, dead keys"
+        schema={schema}
+      />
+      <MainLayout
+        title="Keyboard Tester - TestMyRig"
+        headerTitle="Keyboard Tester"
+        headerDescription="Visualize your key presses in real-time. Check if all your keyboard keys are working correctly."
+      >
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Typed Output</CardTitle>
+              <CardDescription>This area shows what you are typing. Useful for checking if character keys produce the expected output.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Textarea
+                value={typedText}
+                readOnly
+                placeholder="Type on your keyboard..."
+                className="w-full h-24 md:h-32 text-sm font-mono bg-muted/20 dark:bg-muted/30 border-input"
+                aria-label="Typed text output"
+              />
+            </CardContent>
+          </Card>
 
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Online Keyboard Tester - Check Your Keyboard Keys | TestMyRig" />
-        <meta name="twitter:description" content="Test your keyboard online with our interactive keyboard tester. Visualize key presses and check for malfunctioning keys." />
-        <meta name="twitter:image" content="https://testmyrig.com/images/og-keyboard-tools.png" /> {/* Using keyboard category OG image */}
-      </Helmet>
-      <div className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Typed Output</CardTitle>
-            <CardDescription>This area shows what you are typing. Useful for checking if character keys produce the expected output.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Textarea
-              value={typedText}
-              readOnly
-              placeholder="Type on your keyboard..."
-              className="w-full h-24 md:h-32 text-sm font-mono bg-muted/20 dark:bg-muted/30 border-input"
-              aria-label="Typed text output"
-            />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Visual Keyboard Layout</CardTitle>
-            <CardDescription>Press any key on your physical keyboard. The corresponding key below will light up.</CardDescription>
-          </CardHeader>
-          <CardContent className="p-2 sm:p-4 md:p-6 bg-muted/30 rounded-md">
-            <div className="space-y-1.5 md:space-y-2 select-none">
-              {usQwertyLayout.map((row, rowIndex) => (
-                <div key={`row-${rowIndex}`} className="flex space-x-1.5 md:space-x-2 w-full">
-                  {row.map((key) => {
-                    const isPressed = pressedKeys.has(key.code);
-                    const sizeClasses = getKeySizeClasses(key);
-                    return (
-                      <div
-                        key={key.code}
-                        className={`
+          <Card>
+            <CardHeader>
+              <CardTitle>Visual Keyboard Layout</CardTitle>
+              <CardDescription>Press any key on your physical keyboard. The corresponding key below will light up.</CardDescription>
+            </CardHeader>
+            <CardContent className="p-2 sm:p-4 md:p-6 bg-muted/30 rounded-md">
+              <div className="space-y-1.5 md:space-y-2 select-none">
+                {usQwertyLayout.map((row, rowIndex) => (
+                  <div key={`row-${rowIndex}`} className="flex space-x-1.5 md:space-x-2 w-full">
+                    {row.map((key) => {
+                      const isPressed = pressedKeys.has(key.code);
+                      const sizeClasses = getKeySizeClasses(key);
+                      return (
+                        <div
+                          key={key.code}
+                          className={`
                           ${sizeClasses}
                           flex items-center justify-center p-1 md:p-2 rounded-md border border-input 
                           text-xs sm:text-sm text-center whitespace-pre-wrap break-words 
                           transition-all duration-75 ease-in-out 
                           ${isPressed ? 'bg-primary text-primary-foreground scale-95 shadow-inner' : 'bg-card hover:bg-muted/50'}
                         `}
-                      >
-                        {key.display}
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Key Information</CardTitle>
-            <CardDescription>Details of the last key pressed.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {lastPressedKeyInfo ? (
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-                <div><span className="font-semibold">event.key:</span> {lastPressedKeyInfo.key}</div>
-                <div><span className="font-semibold">event.code:</span> {lastPressedKeyInfo.code}</div>
-                <div><span className="font-semibold">event.keyCode:</span> {lastPressedKeyInfo.keyCode} <span className='text-xs text-muted-foreground'>(deprecated)</span></div>
+                        >
+                          {key.display}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
               </div>
-            ) : (
-              <p className="text-sm text-muted-foreground">Press a key to see its information here.</p>
-            )}
-            <Button onClick={resetVisuals} className="mt-4">Reset Visuals</Button>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        <InfoSection {...keyboardTesterInfo} />
-      </div>
-    </MainLayout>
+          <Card>
+            <CardHeader>
+              <CardTitle>Key Information</CardTitle>
+              <CardDescription>Details of the last key pressed.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {lastPressedKeyInfo ? (
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                  <div><span className="font-semibold">event.key:</span> {lastPressedKeyInfo.key}</div>
+                  <div><span className="font-semibold">event.code:</span> {lastPressedKeyInfo.code}</div>
+                  <div><span className="font-semibold">event.keyCode:</span> {lastPressedKeyInfo.keyCode} <span className='text-xs text-muted-foreground'>(deprecated)</span></div>
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">Press a key to see its information here.</p>
+              )}
+              <Button onClick={resetVisuals} className="mt-4">Reset Visuals</Button>
+            </CardContent>
+          </Card>
+
+          <InfoSection {...keyboardTesterInfo} />
+        </div>
+      </MainLayout>
+    </>
   );
 };
 

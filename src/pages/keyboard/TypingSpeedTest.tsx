@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '@/components/SEO';
+import { generateWebPageSchema, generateBreadcrumbSchema } from '@/utils/structuredData';
 import MainLayout from '@/Layout/MainLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -22,12 +23,12 @@ const TypingSpeedTest: React.FC = () => {
   const [status, setStatus] = useState<'idle' | 'running' | 'finished'>('idle');
   const [startTime, setStartTime] = useState<number | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0); // in seconds
-  
+
   // charIndex tracks the current position in the *sample text* that the user should be typing
-  const [charIndex, setCharIndex] = useState(0); 
+  const [charIndex, setCharIndex] = useState(0);
   const [correctChars, setCorrectChars] = useState(0);
   const [mistakes, setMistakes] = useState(0);
-  
+
   const [wpm, setWpm] = useState(0);
   const [cpm, setCpm] = useState(0);
   const [accuracy, setAccuracy] = useState(0);
@@ -39,7 +40,7 @@ const TypingSpeedTest: React.FC = () => {
   const selectNewText = useCallback(() => {
     const randomIndex = Math.floor(Math.random() * SAMPLE_TEXTS.length);
     setCurrentText(SAMPLE_TEXTS[randomIndex]);
-    setCharIndex(0); 
+    setCharIndex(0);
     setInputValue(''); // Also clear input value when new text is selected
     setCorrectChars(0);
     setMistakes(0);
@@ -109,7 +110,7 @@ const TypingSpeedTest: React.FC = () => {
       clearInterval(timerIntervalRef.current);
       timerIntervalRef.current = null;
       // Final calculation when test is finished
-      if(status === 'finished') calculateMetrics();
+      if (status === 'finished') calculateMetrics();
     }
     return () => {
       if (timerIntervalRef.current) {
@@ -164,7 +165,7 @@ const TypingSpeedTest: React.FC = () => {
       }
     }
     setCorrectChars(currentCorrectChars);
-    
+
     // charIndex still represents the current length of the input
     setCharIndex(newTypedValue.length);
 
@@ -183,16 +184,16 @@ const TypingSpeedTest: React.FC = () => {
 
       if (index < charIndex) { // Characters up to the current input length (charIndex)
         if (index < inputValue.length && inputValue[index] === currentText[index]) {
-             className = 'text-green-500'; // Correctly typed
+          className = 'text-green-500'; // Correctly typed
         } else if (index < inputValue.length) { // Check inputValue bounds again for safety
-             className = 'text-red-500 line-through'; // Incorrectly typed
+          className = 'text-red-500 line-through'; // Incorrectly typed
         }
         // If inputValue is shorter than charIndex (e.g., after backspace), already typed chars remain 'muted'
         // This part might need further refinement if we want to show 'previously correct but now untyped' differently
       }
-      
+
       // Highlight the character that *should* be typed next
-      if (index === charIndex && status !== 'finished') { 
+      if (index === charIndex && status !== 'finished') {
         className = 'bg-blue-200 dark:bg-blue-700 rounded-sm text-black dark:text-white animate-pulse';
       }
       // If the test is finished and this char was beyond the input, keep it muted.
@@ -253,99 +254,107 @@ const TypingSpeedTest: React.FC = () => {
     }
   };
 
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      generateWebPageSchema(
+        'Typing Speed Test - Check Your WPM, CPM & Accuracy',
+        'Test your typing speed (WPM & CPM) and accuracy. Practice with sample texts and track your progress. Improve your typing skills today!',
+        'https://testmyrig.com/keyboard-tools/typing-speed-test'
+      ),
+      generateBreadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Keyboard Tools', url: '/keyboard-tools' },
+        { name: 'Typing Speed Test', url: '/keyboard-tools/typing-speed-test' }
+      ])
+    ]
+  };
+
   return (
-    <MainLayout 
-      title="Typing Speed Test - WPM & Accuracy | TestMyRig"
-      headerTitle="Typing Speed Test"
-      headerDescription="Measure your Words Per Minute (WPM), Characters Per Minute (CPM), and accuracy."
-    >
-      <Helmet>
-        <title>Typing Speed Test - Check Your WPM, CPM & Accuracy | TestMyRig</title>
-        <meta name="description" content="Test your typing speed (WPM & CPM) and accuracy. Practice with sample texts and track your progress. Improve your typing skills today!" />
-        <link rel="canonical" href="https://testmyrig.com/keyboard-tools/typing-speed-test" />
-        <meta property="og:title" content="Typing Speed Test - Check Your WPM, CPM & Accuracy | TestMyRig" />
-        <meta property="og:description" content="Test your typing speed (WPM & CPM) and accuracy. Practice with sample texts and track your progress." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://testmyrig.com/keyboard-tools/typing-speed-test" />
-        <meta property="og:image" content="https://testmyrig.com/images/og-keyboard-tools.png" /> {/* Using keyboard category OG image */}
-        <meta property="og:site_name" content="TestMyRig" />
+    <>
+      <SEO
+        title="Typing Speed Test - Check Your WPM, CPM & Accuracy"
+        description="Test your typing speed (WPM & CPM) and accuracy. Practice with sample texts and track your progress. Improve your typing skills today!"
+        canonical="https://testmyrig.com/keyboard-tools/typing-speed-test"
+        keywords="typing speed test, WPM test, typing test, words per minute, CPM test, typing accuracy"
+        schema={schema}
+      />
+      <MainLayout
+        title="Typing Speed Test - WPM & Accuracy | TestMyRig"
+        headerTitle="Typing Speed Test"
+        headerDescription="Measure your Words Per Minute (WPM), Characters Per Minute (CPM), and accuracy."
+      >
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <CardTitle className="flex items-center gap-2">
+                <Type className="w-6 h-6 text-primary" />
+                Test Your Speed
+              </CardTitle>
+              <Button onClick={resetTest} variant="outline" size="sm">
+                <RefreshCcw className="w-4 h-4 mr-2" />
+                Restart
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <Card className="p-4 bg-muted/40 min-h-[100px]">
+              <p className="text-xl leading-relaxed font-mono select-none">
+                {/* Display full text in idle, otherwise render with highlights */}
+                {status === 'idle' && currentText ? currentText : renderSampleText()}
+              </p>
+            </Card>
 
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Typing Speed Test - Check Your WPM, CPM & Accuracy | TestMyRig" />
-        <meta name="twitter:description" content="Test your typing speed (WPM & CPM) and accuracy. Practice with sample texts and track your progress." />
-        <meta name="twitter:image" content="https://testmyrig.com/images/og-keyboard-tools.png" /> {/* Using keyboard category OG image */}
-      </Helmet>
-      <Card>
-        <CardHeader>
-          <div className="flex justify-between items-center">
-            <CardTitle className="flex items-center gap-2">
-              <Type className="w-6 h-6 text-primary" />
-              Test Your Speed
-            </CardTitle>
-            <Button onClick={resetTest} variant="outline" size="sm">
-              <RefreshCcw className="w-4 h-4 mr-2" />
-              Restart
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <Card className="p-4 bg-muted/40 min-h-[100px]">
-            <p className="text-xl leading-relaxed font-mono select-none">
-              {/* Display full text in idle, otherwise render with highlights */}
-              {status === 'idle' && currentText ? currentText : renderSampleText()}
-            </p>
-          </Card>
-
-          <Textarea
-            ref={inputRef}
-            value={inputValue}
-            onChange={handleInputChange}
-            onPaste={(e) => e.preventDefault()} // Prevent pasting
-            placeholder={status === 'idle' ? 'Start typing here to begin the test...' : 'Type the text above...'}
-            className={`
+            <Textarea
+              ref={inputRef}
+              value={inputValue}
+              onChange={handleInputChange}
+              onPaste={(e) => e.preventDefault()} // Prevent pasting
+              placeholder={status === 'idle' ? 'Start typing here to begin the test...' : 'Type the text above...'}
+              className={`
               w-full h-32 p-4 text-lg border rounded-md shadow-sm 
               focus:ring-2 focus:ring-blue-500 
               dark:text-white dark:focus:ring-blue-400
-              ${status === 'finished' 
-                ? 'bg-slate-50 dark:bg-slate-900' // Subtle background for finished state
-                : 'dark:bg-gray-800 dark:border-gray-700' // Original dark mode styles for normal state
-              }
+              ${status === 'finished'
+                  ? 'bg-slate-50 dark:bg-slate-900' // Subtle background for finished state
+                  : 'dark:bg-gray-800 dark:border-gray-700' // Original dark mode styles for normal state
+                }
             `}
-            disabled={status === 'finished'}
-            aria-label="Typing input area"
-          />
+              disabled={status === 'finished'}
+              aria-label="Typing input area"
+            />
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 text-center">
-            <div className="p-3 bg-card border rounded-lg shadow-sm">
-              <div className="text-xs text-muted-foreground uppercase flex items-center justify-center gap-1"><Timer size={14}/>Time</div>
-              <div className="text-3xl font-bold">{elapsedTime.toFixed(1)}s</div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 text-center">
+              <div className="p-3 bg-card border rounded-lg shadow-sm">
+                <div className="text-xs text-muted-foreground uppercase flex items-center justify-center gap-1"><Timer size={14} />Time</div>
+                <div className="text-3xl font-bold">{elapsedTime.toFixed(1)}s</div>
+              </div>
+              <div className="p-3 bg-card border rounded-lg shadow-sm">
+                <div className="text-xs text-muted-foreground uppercase">WPM</div>
+                <div className="text-3xl font-bold">{wpm}</div>
+              </div>
+              <div className="p-3 bg-card border rounded-lg shadow-sm">
+                <div className="text-xs text-muted-foreground uppercase">CPM</div>
+                <div className="text-3xl font-bold">{cpm}</div>
+              </div>
+              <div className="p-3 bg-card border rounded-lg shadow-sm">
+                <div className="text-xs text-muted-foreground uppercase flex items-center justify-center gap-1"><Percent size={14} />Accuracy</div>
+                <div className="text-3xl font-bold">{accuracy.toFixed(1)}%</div>
+              </div>
+              <div className="p-3 bg-card border rounded-lg shadow-sm">
+                <div className="text-xs text-muted-foreground uppercase flex items-center justify-center gap-1"><AlertCircle size={14} />Errors</div>
+                <div className="text-3xl font-bold">{mistakes}</div>
+              </div>
             </div>
-            <div className="p-3 bg-card border rounded-lg shadow-sm">
-              <div className="text-xs text-muted-foreground uppercase">WPM</div>
-              <div className="text-3xl font-bold">{wpm}</div>
-            </div>
-            <div className="p-3 bg-card border rounded-lg shadow-sm">
-              <div className="text-xs text-muted-foreground uppercase">CPM</div>
-              <div className="text-3xl font-bold">{cpm}</div>
-            </div>
-            <div className="p-3 bg-card border rounded-lg shadow-sm">
-              <div className="text-xs text-muted-foreground uppercase flex items-center justify-center gap-1"><Percent size={14}/>Accuracy</div>
-              <div className="text-3xl font-bold">{accuracy.toFixed(1)}%</div>
-            </div>
-            <div className="p-3 bg-card border rounded-lg shadow-sm">
-              <div className="text-xs text-muted-foreground uppercase flex items-center justify-center gap-1"><AlertCircle size={14}/>Errors</div>
-              <div className="text-3xl font-bold">{mistakes}</div>
-            </div>
-          </div>
 
-          {status === 'finished' && (
-            <Card className="mt-6 p-6 bg-card border rounded-lg shadow-sm"> {/* Updated Styling */}
-              <CardTitle className="text-2xl text-green-600 dark:text-green-500 mb-2">Test Completed!</CardTitle> {/* Adjusted Title Color */}
-              <CardDescription className="text-muted-foreground mb-4"> {/* Adjusted Description Color */}
-                Well done! Here are your results. Press Restart to try another text or adjust settings.
-              </CardDescription>
-              {/* More detailed summary card here */}
-              <div className="grid grid-cols-2 gap-4 text-sm">
+            {status === 'finished' && (
+              <Card className="mt-6 p-6 bg-card border rounded-lg shadow-sm"> {/* Updated Styling */}
+                <CardTitle className="text-2xl text-green-600 dark:text-green-500 mb-2">Test Completed!</CardTitle> {/* Adjusted Title Color */}
+                <CardDescription className="text-muted-foreground mb-4"> {/* Adjusted Description Color */}
+                  Well done! Here are your results. Press Restart to try another text or adjust settings.
+                </CardDescription>
+                {/* More detailed summary card here */}
+                <div className="grid grid-cols-2 gap-4 text-sm">
                   <div><strong>Raw WPM:</strong> {rawWpm}</div>
                   <div><strong>Net WPM:</strong> {wpm}</div>
                   <div><strong>CPM:</strong> {cpm}</div>
@@ -353,18 +362,19 @@ const TypingSpeedTest: React.FC = () => {
                   <div><strong>Correct Characters:</strong> {correctChars}</div>
                   <div><strong>Mistakes:</strong> {mistakes}</div>
                   <div><strong>Time Taken:</strong> {elapsedTime.toFixed(2)}s</div>
-              </div>
-            </Card>
-          )}
-        </CardContent>
-      </Card>
+                </div>
+              </Card>
+            )}
+          </CardContent>
+        </Card>
 
-      {/* Info Section Added Here */}
-      <div className="mt-8">
-        <InfoSection leftCardData={typingTestInfo.leftCardData} rightCardData={typingTestInfo.rightCardData} />
-      </div>
+        {/* Info Section Added Here */}
+        <div className="mt-8">
+          <InfoSection leftCardData={typingTestInfo.leftCardData} rightCardData={typingTestInfo.rightCardData} />
+        </div>
 
-    </MainLayout>
+      </MainLayout>
+    </>
   );
 };
 

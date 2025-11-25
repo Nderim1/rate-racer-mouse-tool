@@ -14,3 +14,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://testmyrig.com/sitemap.xml
+Sitemap: https://testmyrig.com/blog/sitemap-index.xml

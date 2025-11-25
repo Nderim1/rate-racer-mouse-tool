@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '@/components/SEO';
+import { generateWebPageSchema, generateBreadcrumbSchema } from '@/utils/structuredData';
 import MainLayout from '@/Layout/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -90,84 +91,93 @@ const SharpnessTextTest: React.FC = () => {
     { size: '16px', weight: 'bold', content: 'The quick brown fox jumps over the lazy dog. 0123456789' },
   ];
 
-  return (
-    <MainLayout
-      title="Sharpness & Text Clarity Test - TestMyRig"
-      headerTitle="Sharpness & Text Clarity Test"
-      headerDescription="Evaluate your monitor's sharpness for clear text and images."
-    >
-      <Helmet>
-        <title>Monitor Sharpness & Text Clarity Test | TestMyRig</title>
-        <meta name="description" content="Test and adjust your monitor's sharpness for optimal text clarity and image detail. Use checkerboard patterns and text samples to fine-tune settings." />
-        <link rel="canonical" href="https://testmyrig.com/monitor-tools/sharpness-text-test" />
-        <meta property="og:title" content="Monitor Sharpness & Text Clarity Test | TestMyRig" />
-        <meta property="og:description" content="Test and adjust your monitor's sharpness for optimal text clarity and image detail. Fine-tune your display settings with our test patterns." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://testmyrig.com/monitor-tools/sharpness-text-test" />
-        <meta property="og:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
-        <meta property="og:site_name" content="TestMyRig" />
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      generateWebPageSchema(
+        'Monitor Sharpness & Text Clarity Test',
+        'Test and adjust your monitor\'s sharpness for optimal text clarity and image detail. Use checkerboard patterns and text samples to fine-tune settings.',
+        'https://testmyrig.com/monitor-tools/sharpness-text-test'
+      ),
+      generateBreadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Monitor Tools', url: '/monitor-tools' },
+        { name: 'Sharpness Test', url: '/monitor-tools/sharpness-text-test' }
+      ])
+    ]
+  };
 
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Monitor Sharpness & Text Clarity Test | TestMyRig" />
-        <meta name="twitter:description" content="Test and adjust your monitor's sharpness for optimal text clarity and image detail. Fine-tune your display settings with our test patterns." />
-        <meta name="twitter:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
-      </Helmet>
-      <div ref={fullScreenRef} className={`${isFullScreen ? 'fixed inset-0 z-[100] bg-white overflow-auto' : 'relative'}`}>
-        {isFullScreen && (
-          <Button onClick={toggleFullScreen} variant="outline" size="sm" className="fixed top-4 right-4 z-[110] bg-black bg-opacity-50 text-white hover:bg-opacity-75">
-            <Minimize className="mr-2 h-4 w-4" /> Exit Full Screen
-          </Button>
-        )}
-        <div id="test-content-area" className={`p-1 ${isFullScreen ? 'p-8 bg-white' : ''}`}>
-          {!isFullScreen && (
+  return (
+    <>
+      <SEO
+        title="Monitor Sharpness & Text Clarity Test"
+        description="Test and adjust your monitor's sharpness for optimal text clarity and image detail. Use checkerboard patterns and text samples to fine-tune settings."
+        canonical="https://testmyrig.com/monitor-tools/sharpness-text-test"
+        keywords="sharpness test, text clarity test, monitor sharpness, display sharpness, screen clarity"
+        schema={schema}
+      />
+      <MainLayout
+        title="Sharpness & Text Clarity Test - TestMyRig"
+        headerTitle="Sharpness & Text Clarity Test"
+        headerDescription="Evaluate your monitor's sharpness for clear text and images."
+      >
+        <div ref={fullScreenRef} className={`${isFullScreen ? 'fixed inset-0 z-[100] bg-white overflow-auto' : 'relative'}`}>
+          {isFullScreen && (
+            <Button onClick={toggleFullScreen} variant="outline" size="sm" className="fixed top-4 right-4 z-[110] bg-black bg-opacity-50 text-white hover:bg-opacity-75">
+              <Minimize className="mr-2 h-4 w-4" /> Exit Full Screen
+            </Button>
+          )}
+          <div id="test-content-area" className={`p-1 ${isFullScreen ? 'p-8 bg-white' : ''}`}>
+            {!isFullScreen && (
+              <Card className="mb-6">
+                <CardHeader>
+                  <CardTitle>Controls</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Button onClick={toggleFullScreen} className="w-full">
+                    <Maximize className="mr-2 h-4 w-4" /> Toggle Full Screen View
+                  </Button>
+                  <p className="text-sm text-muted-foreground mt-2">Use full-screen mode for an optimal assessment environment. Press 'ESC' to exit anytime.</p>
+                </CardContent>
+              </Card>
+            )}
+
             <Card className="mb-6">
               <CardHeader>
-                <CardTitle>Controls</CardTitle>
+                <CardTitle>Checkerboard Patterns</CardTitle>
+                <CardDescription>Observe for crisp lines without halos or blurring.</CardDescription>
               </CardHeader>
-              <CardContent>
-                <Button onClick={toggleFullScreen} className="w-full">
-                  <Maximize className="mr-2 h-4 w-4" /> Toggle Full Screen View
-                </Button>
-                <p className="text-sm text-muted-foreground mt-2">Use full-screen mode for an optimal assessment environment. Press 'ESC' to exit anytime.</p>
+              <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-4 border rounded-md bg-gray-100">
+                  <p className="text-sm font-medium mb-2 text-center">1px Black/White Checkerboard</p>
+                  <div style={{ width: '100%', height: '150px', backgroundSize: '2px 2px', backgroundImage: 'linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000), linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000), linear-gradient(to right, #fff 1px, transparent 1px), linear-gradient(to bottom, #fff 1px, transparent 1px)', backgroundPosition: '0 0, 1px 1px, 0 0, 0 0' }}></div>
+                </div>
+                <div className="p-4 border rounded-md bg-gray-100">
+                  <p className="text-sm font-medium mb-2 text-center">2px Black/White Checkerboard</p>
+                  <div style={{ width: '100%', height: '150px', backgroundSize: '4px 4px', backgroundImage: 'linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000), linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000), linear-gradient(to right, #fff 2px, transparent 2px), linear-gradient(to bottom, #fff 2px, transparent 2px)', backgroundPosition: '0 0, 2px 2px, 0 0, 0 0' }}></div>
+                </div>
               </CardContent>
             </Card>
-          )}
 
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>Checkerboard Patterns</CardTitle>
-              <CardDescription>Observe for crisp lines without halos or blurring.</CardDescription>
-            </CardHeader>
-            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 border rounded-md bg-gray-100">
-                <p className="text-sm font-medium mb-2 text-center">1px Black/White Checkerboard</p>
-                <div style={{ width: '100%', height: '150px', backgroundSize: '2px 2px', backgroundImage: 'linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000), linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000), linear-gradient(to right, #fff 1px, transparent 1px), linear-gradient(to bottom, #fff 1px, transparent 1px)', backgroundPosition: '0 0, 1px 1px, 0 0, 0 0' }}></div>
-              </div>
-              <div className="p-4 border rounded-md bg-gray-100">
-                <p className="text-sm font-medium mb-2 text-center">2px Black/White Checkerboard</p>
-                <div style={{ width: '100%', height: '150px', backgroundSize: '4px 4px', backgroundImage: 'linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000), linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000), linear-gradient(to right, #fff 2px, transparent 2px), linear-gradient(to bottom, #fff 2px, transparent 2px)', backgroundPosition: '0 0, 2px 2px, 0 0, 0 0' }}></div>
-              </div>
-            </CardContent>
-          </Card>
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle>Text Clarity Samples</CardTitle>
+                <CardDescription>Ensure text is sharp, clear, and readable without artifacts.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {textSamples.map((sample, index) => (
+                  <div key={index} style={{ fontSize: sample.size, fontWeight: sample.weight, fontFamily: 'Arial, Helvetica, sans-serif', color: '#000000', backgroundColor: '#FFFFFF', padding: '8px', border: '1px solid #EEE' }} className="leading-snug">
+                    ({sample.size} {sample.weight}) {sample.content}
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
 
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>Text Clarity Samples</CardTitle>
-              <CardDescription>Ensure text is sharp, clear, and readable without artifacts.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {textSamples.map((sample, index) => (
-                <div key={index} style={{ fontSize: sample.size, fontWeight: sample.weight, fontFamily: 'Arial, Helvetica, sans-serif', color: '#000000', backgroundColor: '#FFFFFF', padding: '8px', border: '1px solid #EEE' }} className="leading-snug">
-                  ({sample.size} {sample.weight}) {sample.content}
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-
-          {!isFullScreen && <InfoSection {...testPatternsInfo} />}
+            {!isFullScreen && <InfoSection {...testPatternsInfo} />}
+          </div>
         </div>
-      </div>
-    </MainLayout>
+      </MainLayout>
+    </>
   );
 };
 

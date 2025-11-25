@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '@/components/SEO';
+import { generateWebPageSchema, generateBreadcrumbSchema } from '@/utils/structuredData';
 import MainLayout from '@/Layout/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,7 +18,7 @@ const KeyRolloverTest: React.FC = () => {
         event.preventDefault();
       }
     }
-    
+
     setPressedKeys((prevKeys) => {
       const newKeys = new Set(prevKeys);
       newKeys.add(event.code);
@@ -55,7 +56,7 @@ const KeyRolloverTest: React.FC = () => {
     if (count >= 10) return "NKRO Detected (10+ Keys)"; // Common threshold for NKRO marketing
     return `${count}-Key Rollover`;
   };
-  
+
   const keyRolloverInfo: InfoSectionProps = {
     leftCardData: {
       title: "Understanding Key Rollover (NKRO) & Ghosting",
@@ -100,62 +101,71 @@ const KeyRolloverTest: React.FC = () => {
     }
   };
 
-  return (
-    <MainLayout 
-      title="Key Rollover & NKRO Test - TestMyRig"
-      headerTitle="Key Rollover & Ghosting Test"
-      headerDescription="Test your keyboard's N-Key Rollover (NKRO) capability and check for ghosting."
-    >
-      <Helmet>
-        <title>Key Rollover & NKRO Test - Keyboard Simultaneous Press Test | TestMyRig</title>
-        <meta name="description" content="Test your keyboard's N-Key Rollover (NKRO) and identify ghosting. See how many keys your keyboard can register at once. Essential for gamers and fast typists." />
-        <link rel="canonical" href="https://testmyrig.com/keyboard-tools/key-rollover-test" />
-        <meta property="og:title" content="Key Rollover & NKRO Test - Keyboard Simultaneous Press Test | TestMyRig" />
-        <meta property="og:description" content="Test your keyboard's N-Key Rollover (NKRO) and identify ghosting. See how many keys your keyboard can register at once." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://testmyrig.com/keyboard-tools/key-rollover-test" />
-        <meta property="og:image" content="https://testmyrig.com/images/og-keyboard-tools.png" /> {/* Using keyboard category OG image */}
-        <meta property="og:site_name" content="TestMyRig" />
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      generateWebPageSchema(
+        'Key Rollover & NKRO Test - Keyboard Simultaneous Press Test',
+        'Test your keyboard\'s N-Key Rollover (NKRO) and identify ghosting. See how many keys your keyboard can register at once. Essential for gamers and fast typists.',
+        'https://testmyrig.com/keyboard-tools/key-rollover-test'
+      ),
+      generateBreadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Keyboard Tools', url: '/keyboard-tools' },
+        { name: 'Key Rollover Test', url: '/keyboard-tools/key-rollover-test' }
+      ])
+    ]
+  };
 
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Key Rollover & NKRO Test - Keyboard Simultaneous Press Test | TestMyRig" />
-        <meta name="twitter:description" content="Test your keyboard's N-Key Rollover (NKRO) and identify ghosting. See how many keys your keyboard can register at once." />
-        <meta name="twitter:image" content="https://testmyrig.com/images/og-keyboard-tools.png" /> {/* Using keyboard category OG image */}
-      </Helmet>
-      <div className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Key Rollover Test</CardTitle>
-            <CardDescription>
-              Press and hold multiple keys simultaneously. See which ones register below and the maximum detected rollover.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <h3 className="text-lg font-semibold mb-2">Currently Pressed Keys:</h3>
-              <div className="min-h-[6rem] p-3 border rounded-md bg-muted/30 flex flex-wrap gap-2 items-center text-sm">
-                {pressedKeys.size > 0 ? (
-                  Array.from(pressedKeys).map((key) => (
-                    <span key={key} className="px-2 py-1 bg-primary text-primary-foreground rounded-md shadow">
-                      {key}
-                    </span>
-                  ))
-                ) : (
-                  <span className="text-muted-foreground">No keys currently pressed.</span>
-                )}
+  return (
+    <>
+      <SEO
+        title="Key Rollover & NKRO Test - Keyboard Simultaneous Press Test"
+        description="Test your keyboard's N-Key Rollover (NKRO) and identify ghosting. See how many keys your keyboard can register at once. Essential for gamers and fast typists."
+        canonical="https://testmyrig.com/keyboard-tools/key-rollover-test"
+        keywords="NKRO test, key rollover test, keyboard ghosting test, N-key rollover, keyboard test"
+        schema={schema}
+      />
+      <MainLayout
+        title="Key Rollover & NKRO Test - TestMyRig"
+        headerTitle="Key Rollover & Ghosting Test"
+        headerDescription="Test your keyboard's N-Key Rollover (NKRO) capability and check for ghosting."
+      >
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Key Rollover Test</CardTitle>
+              <CardDescription>
+                Press and hold multiple keys simultaneously. See which ones register below and the maximum detected rollover.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <h3 className="text-lg font-semibold mb-2">Currently Pressed Keys:</h3>
+                <div className="min-h-[6rem] p-3 border rounded-md bg-muted/30 flex flex-wrap gap-2 items-center text-sm">
+                  {pressedKeys.size > 0 ? (
+                    Array.from(pressedKeys).map((key) => (
+                      <span key={key} className="px-2 py-1 bg-primary text-primary-foreground rounded-md shadow">
+                        {key}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-muted-foreground">No keys currently pressed.</span>
+                  )}
+                </div>
               </div>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold">Maximum Simultaneous Presses:</h3>
-              <p className="text-2xl font-bold text-primary">{getRolloverStatus(maxPressedCount)}</p>
-            </div>
-            <Button onClick={resetTest} className="mt-2">Reset Test</Button>
-          </CardContent>
-        </Card>
-        
-        <InfoSection {...keyRolloverInfo} />
-      </div>
-    </MainLayout>
+              <div>
+                <h3 className="text-lg font-semibold">Maximum Simultaneous Presses:</h3>
+                <p className="text-2xl font-bold text-primary">{getRolloverStatus(maxPressedCount)}</p>
+              </div>
+              <Button onClick={resetTest} className="mt-2">Reset Test</Button>
+            </CardContent>
+          </Card>
+
+          <InfoSection {...keyRolloverInfo} />
+        </div>
+      </MainLayout>
+    </>
   );
 };
 

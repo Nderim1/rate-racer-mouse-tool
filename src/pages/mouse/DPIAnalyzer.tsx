@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '@/components/SEO';
+import { generateWebPageSchema, generateBreadcrumbSchema } from '@/utils/structuredData';
 import { AppSidebar } from '@/components/AppSidebar';
 import { SidebarProvider, SidebarInset, SidebarRail, SidebarTrigger } from "@/components/ui/sidebar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,6 +11,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Mouse, Target, HelpCircle, Info } from 'lucide-react';
 import MainLayout from '@/Layout/MainLayout';
 import InfoSection from '@/components/InfoSection';
+import { RelatedTools } from '@/components/RelatedTools';
+import { mouseToolItems } from '@/toolMenuItems';
 
 const DPIAnalyzer = () => {
   const [distance, setDistance] = useState<number>(0);
@@ -100,144 +103,156 @@ const DPIAnalyzer = () => {
     }
   };
 
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      generateWebPageSchema(
+        'DPI Analyzer - Test Mouse DPI Accuracy',
+        'Analyze your mouse\'s actual DPI and sensitivity. Verify if your mouse DPI matches the advertised specifications.',
+        'https://testmyrig.com/mouse-tools/dpi-analyzer'
+      ),
+      generateBreadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Mouse Tools', url: '/mouse-tools' },
+        { name: 'DPI Analyzer', url: '/mouse-tools/dpi-analyzer' }
+      ])
+    ]
+  };
+
+  const relatedTools = mouseToolItems.filter(tool => tool.path !== '/mouse-tools/dpi-analyzer');
+
   return (
-    <MainLayout headerTitle="Mouse DPI Analyzer" headerDescription="Measure your mouse's DPI with precision">
-      <Helmet>
-        <title>Mouse DPI Analyzer - Check Your True Mouse DPI | TestMyRig</title>
-        <meta name="description" content="Accurately measure your mouse's true DPI (Dots Per Inch). Understand how DPI affects sensitivity and precision for gaming and everyday use." />
-        <link rel="canonical" href="https://testmyrig.com/mouse-tools/dpi-analyzer" />
-        <meta property="og:title" content="Mouse DPI Analyzer - Check Your True Mouse DPI | TestMyRig" />
-        <meta property="og:description" content="Accurately measure your mouse's true DPI (Dots Per Inch). Understand how DPI affects sensitivity and precision." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://testmyrig.com/mouse-tools/dpi-analyzer" />
-        <meta property="og:image" content="https://testmyrig.com/images/og-mouse-tools.png" /> {/* Re-using category OG image */}
-        <meta property="og:site_name" content="TestMyRig" />
+    <>
+      <SEO
+        title="DPI Analyzer - Test Mouse DPI Accuracy"
+        description="Accurately measure your mouse's true DPI (Dots Per Inch). Understand how DPI affects sensitivity and precision for gaming and everyday use."
+        canonical="https://testmyrig.com/mouse-tools/dpi-analyzer"
+        keywords="DPI test, mouse DPI, DPI analyzer, mouse sensitivity test"
+        schema={schema}
+      />
+      <MainLayout headerTitle="Mouse DPI Analyzer" headerDescription="Measure your mouse's DPI with precision">
+        {/* Instructions Card */}
+        <div className="flex flex-col gap-2 ">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Info className="h-5 w-5 text-primary" />
+                How to Measure Your Mouse DPI
+              </CardTitle>
+              <CardDescription>
+                Follow these steps to accurately measure your mouse's DPI
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ol className="list-decimal ml-5 space-y-2">
+                <li>Enter the physical distance you plan to move your mouse (in centimeters)</li>
+                <li>Click and hold in the test area below</li>
+                <li>Move your mouse horizontally the exact distance you entered</li>
+                <li>Release the mouse button to see your calculated DPI</li>
+              </ol>
+            </CardContent>
+          </Card>
 
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Mouse DPI Analyzer - Check Your True Mouse DPI | TestMyRig" />
-        <meta name="twitter:description" content="Accurately measure your mouse's true DPI (Dots Per Inch). Understand how DPI affects sensitivity and precision." />
-        <meta name="twitter:image" content="https://testmyrig.com/images/og-mouse-tools.png" /> {/* Re-using category OG image */}
-      </Helmet>
-      {/* Instructions Card */}
-      <div className="flex flex-col gap-2 ">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Info className="h-5 w-5 text-primary" />
-              How to Measure Your Mouse DPI
-            </CardTitle>
-            <CardDescription>
-              Follow these steps to accurately measure your mouse's DPI
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ol className="list-decimal ml-5 space-y-2">
-              <li>Enter the physical distance you plan to move your mouse (in centimeters)</li>
-              <li>Click and hold in the test area below</li>
-              <li>Move your mouse horizontally the exact distance you entered</li>
-              <li>Release the mouse button to see your calculated DPI</li>
-            </ol>
-          </CardContent>
-        </Card>
-
-        {/* Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Test Settings</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-end gap-4">
-              <div className="flex-1">
-                <Label htmlFor="distance" className="mb-2 block">
-                  Physical Distance to Move Mouse (cm)
-                </Label>
-                <Input
-                  id="distance"
-                  type="number"
-                  min="1"
-                  max="50"
-                  value={inputDistance}
-                  onChange={(e) => setInputDistance(e.target.value)}
-                  className="w-full"
-                />
+          {/* Settings */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Test Settings</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-end gap-4">
+                <div className="flex-1">
+                  <Label htmlFor="distance" className="mb-2 block">
+                    Physical Distance to Move Mouse (cm)
+                  </Label>
+                  <Input
+                    id="distance"
+                    type="number"
+                    min="1"
+                    max="50"
+                    value={inputDistance}
+                    onChange={(e) => setInputDistance(e.target.value)}
+                    className="w-full"
+                  />
+                </div>
+                <Button onClick={handleReset} variant="outline">
+                  Reset Test
+                </Button>
               </div>
-              <Button onClick={handleReset} variant="outline">
-                Reset Test
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        {/* Test Area */}
-        <Card>
-          <CardHeader>
-            <CardTitle>DPI Test Area</CardTitle>
-            <CardDescription>
-              Click and drag horizontally within this area
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div
-              ref={trackRef}
-              className={`test-area h-32 flex items-center justify-center ${isActive ? 'test-area-active' : ''}`}
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUp}
-              onMouseLeave={handleMouseUp}
-            >
-              {isActive ? (
-                <div className="text-center">
-                  <Target className="h-8 w-8 mx-auto mb-2 text-primary animate-pulse" />
-                  <p className="text-xl">
-                    <span className="font-bold">{distance}</span> pixels moved
-                  </p>
-                  <p className="text-muted-foreground text-sm">
-                    Keep moving horizontally...
-                  </p>
-                </div>
-              ) : (
-                <div className="text-center">
-                  <Mouse className="h-8 w-8 mx-auto mb-2 text-primary" />
-                  <p className="text-xl font-medium">
-                    Click and drag horizontally
-                  </p>
-                  <p className="text-muted-foreground text-sm">
-                    Move exactly {inputDistance} cm to measure your DPI
-                  </p>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+          {/* Test Area */}
+          <Card>
+            <CardHeader>
+              <CardTitle>DPI Test Area</CardTitle>
+              <CardDescription>
+                Click and drag horizontally within this area
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div
+                ref={trackRef}
+                className={`test-area h-32 flex items-center justify-center ${isActive ? 'test-area-active' : ''}`}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseUp}
+              >
+                {isActive ? (
+                  <div className="text-center">
+                    <Target className="h-8 w-8 mx-auto mb-2 text-primary animate-pulse" />
+                    <p className="text-xl">
+                      <span className="font-bold">{distance}</span> pixels moved
+                    </p>
+                    <p className="text-muted-foreground text-sm">
+                      Keep moving horizontally...
+                    </p>
+                  </div>
+                ) : (
+                  <div className="text-center">
+                    <Mouse className="h-8 w-8 mx-auto mb-2 text-primary" />
+                    <p className="text-xl font-medium">
+                      Click and drag horizontally
+                    </p>
+                    <p className="text-muted-foreground text-sm">
+                      Move exactly {inputDistance} cm to measure your DPI
+                    </p>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
 
-        {/* Results */}
-        <Card>
-          <CardHeader>
-            <CardTitle>DPI Results</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-center py-8">
-              {calculatedDPI !== null ? (
-                <div className="text-center">
-                  <p className="text-6xl font-bold mb-2 text-primary">
-                    {calculatedDPI}
-                  </p>
-                  <p className="text-xl text-muted-foreground">DPI</p>
-                </div>
-              ) : (
-                <div className="text-center text-muted-foreground">
-                  <p>Complete the test to see your mouse DPI</p>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-      <section className="container mx-auto p-4 md:p-8 mt-8">
-        <h2 className="text-2xl font-bold mb-6 text-center">About Mouse DPI</h2>
-        <InfoSection {...dpiAnalyzerInfoData} />
-      </section>
-    </MainLayout>
+          {/* Results */}
+          <Card>
+            <CardHeader>
+              <CardTitle>DPI Results</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-center py-8">
+                {calculatedDPI !== null ? (
+                  <div className="text-center">
+                    <p className="text-6xl font-bold mb-2 text-primary">
+                      {calculatedDPI}
+                    </p>
+                    <p className="text-xl text-muted-foreground">DPI</p>
+                  </div>
+                ) : (
+                  <div className="text-center text-muted-foreground">
+                    <p>Complete the test to see your mouse DPI</p>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        <section className="container mx-auto p-4 md:p-8 mt-8">
+          <h2 className="text-2xl font-bold mb-6 text-center">About Mouse DPI</h2>
+          <InfoSection {...dpiAnalyzerInfoData} />
+        </section>
+        <RelatedTools tools={relatedTools} />
+      </MainLayout>
+    </>
   );
 };
 

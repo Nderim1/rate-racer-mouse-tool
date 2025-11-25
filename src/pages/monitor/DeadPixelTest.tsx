@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '@/components/SEO';
+import { generateWebPageSchema, generateBreadcrumbSchema } from '@/utils/structuredData';
 import MainLayout from '@/Layout/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -114,107 +115,116 @@ const DeadPixelTest: React.FC = () => {
     }
   };
 
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      generateWebPageSchema(
+        'Dead Pixel Test - Check Your Monitor for Dead or Stuck Pixels',
+        'Test your monitor or screen for dead, stuck, or hot pixels using solid color backgrounds. Detect pixel defects on any display.',
+        'https://testmyrig.com/monitor-tools/dead-pixel-test'
+      ),
+      generateBreadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Monitor Tools', url: '/monitor-tools' },
+        { name: 'Dead Pixel Test', url: '/monitor-tools/dead-pixel-test' }
+      ])
+    ]
+  };
+
   return (
-    <MainLayout
-      title="Dead Pixel & Stuck Pixel Test - TestMyRig"
-      headerTitle="Dead Pixel / Stuck Pixel Test"
-      headerDescription="Check your screen for dead, stuck, or bright pixels using full-screen solid colors."
-    >
-      <Helmet>
-        <title>Dead Pixel & Stuck Pixel Test | Monitor Checker | TestMyRig</title>
-        <meta name="description" content="Test your monitor for dead, stuck, or bright pixels with our full-screen color test. Easily identify screen defects and ensure pixel perfect display quality." />
-        <link rel="canonical" href="https://testmyrig.com/monitor-tools/dead-pixel-test" />
-        <meta property="og:title" content="Dead Pixel & Stuck Pixel Test | Monitor Checker | TestMyRig" />
-        <meta property="og:description" content="Test your monitor for dead, stuck, or bright pixels. Our full-screen color test helps you identify screen defects quickly." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://testmyrig.com/monitor-tools/dead-pixel-test" />
-        <meta property="og:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
-        <meta property="og:site_name" content="TestMyRig" />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Dead Pixel & Stuck Pixel Test | Monitor Checker | TestMyRig" />
-        <meta name="twitter:description" content="Test your monitor for dead, stuck, or bright pixels. Our full-screen color test helps you identify screen defects quickly." />
-        <meta name="twitter:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
-      </Helmet>
-      <div
-        ref={fullScreenRef}
-        style={{ backgroundColor: isFullScreen ? currentColor : 'transparent' }}
-        className={`transition-colors duration-150 ${isFullScreen ? 'fixed inset-0 z-[100]' : 'relative'}`}
+    <>
+      <SEO
+        title="Dead Pixel Test - Check Your Monitor for Dead or Stuck Pixels"
+        description="Test your monitor or screen for dead, stuck, or hot pixels using solid color backgrounds. Detect pixel defects on any display."
+        canonical="https://testmyrig.com/monitor-tools/dead-pixel-test"
+        keywords="dead pixel test, stuck pixel test, monitor test, screen test, pixel test"
+        schema={schema}
+      />
+      <MainLayout
+        title="Dead Pixel Test - TestMyRig"
+        headerTitle="Dead Pixel Test"
+        headerDescription="Check your monitor for dead, stuck, or hot pixels using solid color backgrounds."
       >
-        {isFullScreen && (
-          <div className='absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center p-4'>
-            <div className='absolute top-4 left-1/2 -translate-x-1/2 p-3 bg-black bg-opacity-70 text-white rounded-md shadow-lg text-center'>
-              <p className='text-lg font-semibold'>
-                Selected Color: <span style={{ color: currentColor === '#000000' ? '#FFFFFF' : currentColor, textShadow: '0 0 5px rgba(0,0,0,0.7)' }}>
-                  {colors.find(c => c.hex === currentColor)?.name}
-                </span>
-              </p>
-              <p className='text-sm mt-1'>Press 'ESC' or click button below to exit Full Screen</p>
-            </div>
-
-            <div className="fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 p-3 bg-black bg-opacity-70 rounded-md shadow-lg">
-              {colors.map((color) => (
-                <Button
-                  key={color.name + '-fullscreen'}
-                  onClick={() => setCurrentColor(color.hex)}
-                  variant={'outline'}
-                  size={'icon'}
-                  className="w-10 h-10 border-2 border-white hover:opacity-80 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
-                  title={color.name}
-                  style={{ backgroundColor: color.hex }}
-                >
-                  {currentColor === color.hex && <span className="text-white mix-blend-difference text-lg">✓</span>}
-                </Button>
-              ))}
-              <Button onClick={toggleFullScreen} variant="outline" size="icon" className="w-10 h-10 border-2 border-white ml-2" title="Exit Full Screen">
-                <Minimize className="h-5 w-5 text-white" />
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {!isFullScreen && (
-          <div className="space-y-6 p-1">
-            <Card>
-              <CardHeader>
-                <CardTitle>Test Area & Controls</CardTitle>
-                <CardDescription>
-                  Select a color and use the full-screen mode to inspect your monitor.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div
-                  style={{ backgroundColor: currentColor }}
-                  className="w-full h-64 border rounded-md flex items-center justify-center text-xl font-semibold transition-colors duration-150 relative"
-                >
-                  <span style={{ color: currentColor === '#FFFFFF' || currentColor === '#FFFF00' || currentColor === '#00FFFF' ? '#000000' : '#FFFFFF', textShadow: '1px 1px 1px rgba(0,0,0,0.2)' }}>
+        <div
+          ref={fullScreenRef}
+          style={{ backgroundColor: isFullScreen ? currentColor : 'transparent' }}
+          className={`transition-colors duration-150 ${isFullScreen ? 'fixed inset-0 z-[100]' : 'relative'}`}
+        >
+          {isFullScreen && (
+            <div className='absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center p-4'>
+              <div className='absolute top-4 left-1/2 -translate-x-1/2 p-3 bg-black bg-opacity-70 text-white rounded-md shadow-lg text-center'>
+                <p className='text-lg font-semibold'>
+                  Selected Color: <span style={{ color: currentColor === '#000000' ? '#FFFFFF' : currentColor, textShadow: '0 0 5px rgba(0,0,0,0.7)' }}>
                     {colors.find(c => c.hex === currentColor)?.name}
                   </span>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                  {colors.map((color) => (
-                    <Button
-                      key={color.name}
-                      onClick={() => setCurrentColor(color.hex)}
-                      variant={currentColor === color.hex ? 'default' : 'outline'}
-                      className="w-full justify-start text-sm h-auto py-2 px-3 leading-tight"
-                    >
-                      <span style={{ backgroundColor: color.hex }} className="w-4 h-4 rounded-full inline-block mr-2 border border-gray-400"></span>
-                      {color.name}
-                    </Button>
-                  ))}
-                </div>
-                <Button onClick={toggleFullScreen} className="w-full mt-4">
-                  <Maximize className="mr-2 h-4 w-4" />
-                  Toggle Full Screen
+                </p>
+                <p className='text-sm mt-1'>Press 'ESC' or click button below to exit Full Screen</p>
+              </div>
+
+              <div className="fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 p-3 bg-black bg-opacity-70 rounded-md shadow-lg">
+                {colors.map((color) => (
+                  <Button
+                    key={color.name + '-fullscreen'}
+                    onClick={() => setCurrentColor(color.hex)}
+                    variant={'outline'}
+                    size={'icon'}
+                    className="w-10 h-10 border-2 border-white hover:opacity-80 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
+                    title={color.name}
+                    style={{ backgroundColor: color.hex }}
+                  >
+                    {currentColor === color.hex && <span className="text-white mix-blend-difference text-lg">✓</span>}
+                  </Button>
+                ))}
+                <Button onClick={toggleFullScreen} variant="outline" size="icon" className="w-10 h-10 border-2 border-white ml-2" title="Exit Full Screen">
+                  <Minimize className="h-5 w-5 text-white" />
                 </Button>
-              </CardContent>
-            </Card>
-            <InfoSection {...deadPixelTestInfo} />
-          </div>
-        )}
-      </div>
-    </MainLayout>
+              </div>
+            </div>
+          )}
+
+          {!isFullScreen && (
+            <div className="space-y-6 p-1">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Test Area & Controls</CardTitle>
+                  <CardDescription>
+                    Select a color and use the full-screen mode to inspect your monitor.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div
+                    style={{ backgroundColor: currentColor }}
+                    className="w-full h-64 border rounded-md flex items-center justify-center text-xl font-semibold transition-colors duration-150 relative"
+                  >
+                    <span style={{ color: currentColor === '#FFFFFF' || currentColor === '#FFFF00' || currentColor === '#00FFFF' ? '#000000' : '#FFFFFF', textShadow: '1px 1px 1px rgba(0,0,0,0.2)' }}>
+                      {colors.find(c => c.hex === currentColor)?.name}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                    {colors.map((color) => (
+                      <Button
+                        key={color.name}
+                        onClick={() => setCurrentColor(color.hex)}
+                        variant={currentColor === color.hex ? 'default' : 'outline'}
+                        className="w-full justify-start text-sm h-auto py-2 px-3 leading-tight"
+                      >
+                        <span style={{ backgroundColor: color.hex }} className="w-4 h-4 rounded-full inline-block mr-2 border border-gray-400"></span>
+                        {color.name}
+                      </Button>
+                    ))}
+                  </div>
+                  <Button onClick={toggleFullScreen} className="w-full mt-4">
+                    <Maximize className="mr-2 h-4 w-4" />
+                    Toggle Full Screen
+                  </Button>
+                </CardContent>
+              </Card>
+              <InfoSection {...deadPixelTestInfo} />
+            </div>
+          )}
+        </div>
+      </MainLayout>
+    </>
   );
 };
 

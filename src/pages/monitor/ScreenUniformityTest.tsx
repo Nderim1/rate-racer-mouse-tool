@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '@/components/SEO';
+import { generateWebPageSchema, generateBreadcrumbSchema } from '@/utils/structuredData';
 import MainLayout from '@/Layout/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -106,76 +107,85 @@ const ScreenUniformityTest: React.FC = () => {
     }
   };
 
-  return (
-    <MainLayout
-      title="Screen Uniformity Test - TestMyRig"
-      headerTitle="Screen Uniformity Test"
-      headerDescription="Check for color and brightness inconsistencies across your monitor."
-    >
-      <Helmet>
-        <title>Screen Uniformity Test - Backlight Bleed & Clouding | TestMyRig</title>
-        <meta name="description" content="Test your monitor for screen uniformity, backlight bleed, clouding, and color tints. Use full-screen patterns to identify display inconsistencies." />
-        <link rel="canonical" href="https://testmyrig.com/monitor-tools/screen-uniformity-test" />
-        <meta property="og:title" content="Screen Uniformity Test - Backlight Bleed & Clouding | TestMyRig" />
-        <meta property="og:description" content="Test your monitor for screen uniformity, backlight bleed, and clouding. Identify display inconsistencies with full-screen patterns." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://testmyrig.com/monitor-tools/screen-uniformity-test" />
-        <meta property="og:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
-        <meta property="og:site_name" content="TestMyRig" />
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      generateWebPageSchema(
+        'Screen Uniformity Test - Backlight Bleed & Clouding',
+        'Test your monitor for screen uniformity, backlight bleed, clouding, and color tints. Use full-screen patterns to identify display inconsistencies.',
+        'https://testmyrig.com/monitor-tools/screen-uniformity-test'
+      ),
+      generateBreadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Monitor Tools', url: '/monitor-tools' },
+        { name: 'Screen Uniformity Test', url: '/monitor-tools/screen-uniformity-test' }
+      ])
+    ]
+  };
 
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Screen Uniformity Test - Backlight Bleed & Clouding | TestMyRig" />
-        <meta name="twitter:description" content="Test your monitor for screen uniformity, backlight bleed, and clouding. Identify display inconsistencies with full-screen patterns." />
-        <meta name="twitter:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
-      </Helmet>
-      <div ref={fullScreenRef} style={{ backgroundColor: isFullScreen ? currentPattern : 'transparent' }} className={`transition-colors duration-150 ${isFullScreen ? 'fixed inset-0 z-[100]' : 'relative'}`}>
-        {isFullScreen && (
-          <div className='absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center p-4'>
-            <div className='absolute top-4 left-1/2 -translate-x-1/2 p-3 bg-black bg-opacity-70 text-white rounded-md shadow-lg text-center'>
-              <p className='text-lg font-semibold'>Selected Pattern: <span style={{ color: currentPattern === '#000000' ? '#FFFFFF' : currentPattern, textShadow: '0 0 5px rgba(0,0,0,0.7)' }}>{patterns.find(p => p.hex === currentPattern)?.name}</span></p>
-              <p className='text-sm mt-1'>Press 'ESC' or click button below to exit</p>
-            </div>
-            <div className="fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 p-3 bg-black bg-opacity-70 rounded-md shadow-lg">
-              {patterns.map((p) => (
-                <Button key={p.name + '-fullscreen'} onClick={() => setCurrentPattern(p.hex)} variant={'outline'} size={'icon'} className="w-10 h-10 border-2 border-white hover:opacity-80 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black" title={p.name} style={{ backgroundColor: p.hex }}>
-                  {currentPattern === p.hex && <span className="text-white mix-blend-difference text-lg">✓</span>}
+  return (
+    <>
+      <SEO
+        title="Screen Uniformity Test - Backlight Bleed & Clouding"
+        description="Test your monitor for screen uniformity, backlight bleed, clouding, and color tints. Use full-screen patterns to identify display inconsistencies."
+        canonical="https://testmyrig.com/monitor-tools/screen-uniformity-test"
+        keywords="screen uniformity test, backlight bleed test, clouding test, monitor uniformity, display test"
+        schema={schema}
+      />
+      <MainLayout
+        title="Screen Uniformity Test - TestMyRig"
+        headerTitle="Screen Uniformity Test"
+        headerDescription="Check for color and brightness inconsistencies across your monitor."
+      >
+        <div ref={fullScreenRef} style={{ backgroundColor: isFullScreen ? currentPattern : 'transparent' }} className={`transition-colors duration-150 ${isFullScreen ? 'fixed inset-0 z-[100]' : 'relative'}`}>
+          {isFullScreen && (
+            <div className='absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center p-4'>
+              <div className='absolute top-4 left-1/2 -translate-x-1/2 p-3 bg-black bg-opacity-70 text-white rounded-md shadow-lg text-center'>
+                <p className='text-lg font-semibold'>Selected Pattern: <span style={{ color: currentPattern === '#000000' ? '#FFFFFF' : currentPattern, textShadow: '0 0 5px rgba(0,0,0,0.7)' }}>{patterns.find(p => p.hex === currentPattern)?.name}</span></p>
+                <p className='text-sm mt-1'>Press 'ESC' or click button below to exit</p>
+              </div>
+              <div className="fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 p-3 bg-black bg-opacity-70 rounded-md shadow-lg">
+                {patterns.map((p) => (
+                  <Button key={p.name + '-fullscreen'} onClick={() => setCurrentPattern(p.hex)} variant={'outline'} size={'icon'} className="w-10 h-10 border-2 border-white hover:opacity-80 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black" title={p.name} style={{ backgroundColor: p.hex }}>
+                    {currentPattern === p.hex && <span className="text-white mix-blend-difference text-lg">✓</span>}
+                  </Button>
+                ))}
+                <Button onClick={toggleFullScreen} variant="outline" size="icon" className="w-10 h-10 border-2 border-white ml-2" title="Exit Full Screen">
+                  <Minimize className="h-5 w-5 text-white" />
                 </Button>
-              ))}
-              <Button onClick={toggleFullScreen} variant="outline" size="icon" className="w-10 h-10 border-2 border-white ml-2" title="Exit Full Screen">
-                <Minimize className="h-5 w-5 text-white" />
-              </Button>
+              </div>
             </div>
-          </div>
-        )}
-        {!isFullScreen && (
-          <div className="space-y-6 p-1">
-            <Card>
-              <CardHeader>
-                <CardTitle>Test Area & Controls</CardTitle>
-                <CardDescription>Select a pattern and use full-screen mode to check for uniformity issues.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div style={{ backgroundColor: currentPattern }} className="w-full h-64 border rounded-md flex items-center justify-center text-xl font-semibold transition-colors duration-150 relative">
-                  <span style={{ color: currentPattern === '#FFFFFF' || currentPattern === '#BFBFBF' || currentPattern === '#808080' ? '#000000' : '#FFFFFF', textShadow: '1px 1px 1px rgba(0,0,0,0.2)' }}>{patterns.find(p => p.hex === currentPattern)?.name}</span>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-2">
-                  {patterns.map((pattern) => (
-                    <Button key={pattern.name} onClick={() => setCurrentPattern(pattern.hex)} variant={currentPattern === pattern.hex ? 'default' : 'outline'} className="w-full justify-start text-sm h-auto py-2 px-3 leading-tight">
-                      <span style={{ backgroundColor: pattern.hex }} className="w-4 h-4 rounded-full inline-block mr-2 border border-gray-400"></span>
-                      {pattern.name}
-                    </Button>
-                  ))}
-                </div>
-                <Button onClick={toggleFullScreen} className="w-full mt-4">
-                  <Maximize className="mr-2 h-4 w-4" /> Toggle Full Screen
-                </Button>
-              </CardContent>
-            </Card>
-            <InfoSection {...uniformityTestInfo} />
-          </div>
-        )}
-      </div>
-    </MainLayout>
+          )}
+          {!isFullScreen && (
+            <div className="space-y-6 p-1">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Test Area & Controls</CardTitle>
+                  <CardDescription>Select a pattern and use full-screen mode to check for uniformity issues.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div style={{ backgroundColor: currentPattern }} className="w-full h-64 border rounded-md flex items-center justify-center text-xl font-semibold transition-colors duration-150 relative">
+                    <span style={{ color: currentPattern === '#FFFFFF' || currentPattern === '#BFBFBF' || currentPattern === '#808080' ? '#000000' : '#FFFFFF', textShadow: '1px 1px 1px rgba(0,0,0,0.2)' }}>{patterns.find(p => p.hex === currentPattern)?.name}</span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-2">
+                    {patterns.map((pattern) => (
+                      <Button key={pattern.name} onClick={() => setCurrentPattern(pattern.hex)} variant={currentPattern === pattern.hex ? 'default' : 'outline'} className="w-full justify-start text-sm h-auto py-2 px-3 leading-tight">
+                        <span style={{ backgroundColor: pattern.hex }} className="w-4 h-4 rounded-full inline-block mr-2 border border-gray-400"></span>
+                        {pattern.name}
+                      </Button>
+                    ))}
+                  </div>
+                  <Button onClick={toggleFullScreen} className="w-full mt-4">
+                    <Maximize className="mr-2 h-4 w-4" /> Toggle Full Screen
+                  </Button>
+                </CardContent>
+              </Card>
+              <InfoSection {...uniformityTestInfo} />
+            </div>
+          )}
+        </div>
+      </MainLayout>
+    </>
   );
 };
 

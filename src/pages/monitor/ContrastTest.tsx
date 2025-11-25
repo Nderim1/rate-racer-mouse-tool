@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '@/components/SEO';
+import { generateWebPageSchema, generateBreadcrumbSchema } from '@/utils/structuredData';
 import MainLayout from '@/Layout/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -107,81 +108,90 @@ const ContrastTest: React.FC = () => {
     }
   };
 
-  return (
-    <MainLayout
-      title="Contrast Ratio Test - TestMyRig"
-      headerTitle="Visual Contrast Ratio Test"
-      headerDescription="Check your monitor's black and white level differentiation."
-    >
-      <Helmet>
-        <title>Monitor Contrast Ratio Test - Black & White Levels | TestMyRig</title>
-        <meta name="description" content="Test your monitor's contrast ratio by checking black and white level differentiation. Identify crushed blacks or clipped whites for optimal picture quality." />
-        <link rel="canonical" href="https://testmyrig.com/monitor-tools/contrast-test" />
-        <meta property="og:title" content="Monitor Contrast Ratio Test - Black & White Levels | TestMyRig" />
-        <meta property="og:description" content="Test your monitor's contrast ratio by checking black and white level differentiation. Optimize your display settings." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://testmyrig.com/monitor-tools/contrast-test" />
-        <meta property="og:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
-        <meta property="og:site_name" content="TestMyRig" />
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      generateWebPageSchema(
+        'Monitor Contrast Ratio Test - Black & White Levels',
+        'Test your monitor\'s contrast ratio by checking black and white level differentiation. Identify crushed blacks or clipped whites for optimal picture quality.',
+        'https://testmyrig.com/monitor-tools/contrast-test'
+      ),
+      generateBreadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Monitor Tools', url: '/monitor-tools' },
+        { name: 'Contrast Test', url: '/monitor-tools/contrast-test' }
+      ])
+    ]
+  };
 
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Monitor Contrast Ratio Test - Black & White Levels | TestMyRig" />
-        <meta name="twitter:description" content="Test your monitor's contrast ratio by checking black and white level differentiation. Optimize your display settings." />
-        <meta name="twitter:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
-      </Helmet>
-      <div ref={fullScreenRef} className={`${isFullScreen ? 'fixed inset-0 z-[100] bg-gray-200 dark:bg-gray-800 overflow-auto' : 'relative'}`}>
-        {isFullScreen && (
-          <Button onClick={toggleFullScreen} variant="outline" size="sm" className="fixed top-4 right-4 z-[110] bg-black bg-opacity-50 text-white hover:bg-opacity-75">
-            <Minimize className="mr-2 h-4 w-4" /> Exit Full Screen
-          </Button>
-        )}
-        <div id="test-content-area" className={`p-1 ${isFullScreen ? 'p-8' : ''}`}>
-          {!isFullScreen && (
+  return (
+    <>
+      <SEO
+        title="Monitor Contrast Ratio Test - Black & White Levels"
+        description="Test your monitor's contrast ratio by checking black and white level differentiation. Identify crushed blacks or clipped whites for optimal picture quality."
+        canonical="https://testmyrig.com/monitor-tools/contrast-test"
+        keywords="contrast test, monitor contrast, black level test, white level test, display calibration"
+        schema={schema}
+      />
+      <MainLayout
+        title="Contrast Ratio Test - TestMyRig"
+        headerTitle="Visual Contrast Ratio Test"
+        headerDescription="Check your monitor's black and white level differentiation."
+      >
+        <div ref={fullScreenRef} className={`${isFullScreen ? 'fixed inset-0 z-[100] bg-gray-200 dark:bg-gray-800 overflow-auto' : 'relative'}`}>
+          {isFullScreen && (
+            <Button onClick={toggleFullScreen} variant="outline" size="sm" className="fixed top-4 right-4 z-[110] bg-black bg-opacity-50 text-white hover:bg-opacity-75">
+              <Minimize className="mr-2 h-4 w-4" /> Exit Full Screen
+            </Button>
+          )}
+          <div id="test-content-area" className={`p-1 ${isFullScreen ? 'p-8' : ''}`}>
+            {!isFullScreen && (
+              <Card className="mb-6">
+                <CardHeader>
+                  <CardTitle>Controls</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Button onClick={toggleFullScreen} className="w-full">
+                    <Maximize className="mr-2 h-4 w-4" /> Toggle Full Screen View
+                  </Button>
+                  <p className="text-sm text-muted-foreground mt-2">Use full-screen mode for an optimal assessment environment, preferably in a dim room. Press 'ESC' to exit anytime.</p>
+                </CardContent>
+              </Card>
+            )}
+
             <Card className="mb-6">
               <CardHeader>
-                <CardTitle>Controls</CardTitle>
+                <CardTitle>Black Level Test</CardTitle>
+                <CardDescription>Distinguish dark gray squares from the black background. The more you see, the better your monitor's shadow detail.</CardDescription>
               </CardHeader>
-              <CardContent>
-                <Button onClick={toggleFullScreen} className="w-full">
-                  <Maximize className="mr-2 h-4 w-4" /> Toggle Full Screen View
-                </Button>
-                <p className="text-sm text-muted-foreground mt-2">Use full-screen mode for an optimal assessment environment, preferably in a dim room. Press 'ESC' to exit anytime.</p>
+              <CardContent style={{ backgroundColor: '#000000' }} className="p-4 md:p-6 flex flex-wrap justify-center items-center gap-1 md:gap-2 rounded-md">
+                {blackLevelShades.map(shade => (
+                  <div key={`black-${shade.name}`} title={`Black Level: ${shade.name}`} style={{ backgroundColor: shade.hex, width: isFullScreen ? '60px' : '50px', height: isFullScreen ? '60px' : '50px' }} className="flex items-center justify-center">
+                    <span className={`text-xs ${isFullScreen ? 'text-gray-400' : 'text-gray-500'}`}>{isFullScreen ? shade.name : ''}</span>
+                  </div>
+                ))}
               </CardContent>
             </Card>
-          )}
 
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>Black Level Test</CardTitle>
-              <CardDescription>Distinguish dark gray squares from the black background. The more you see, the better your monitor's shadow detail.</CardDescription>
-            </CardHeader>
-            <CardContent style={{ backgroundColor: '#000000' }} className="p-4 md:p-6 flex flex-wrap justify-center items-center gap-1 md:gap-2 rounded-md">
-              {blackLevelShades.map(shade => (
-                <div key={`black-${shade.name}`} title={`Black Level: ${shade.name}`} style={{ backgroundColor: shade.hex, width: isFullScreen ? '60px' : '50px', height: isFullScreen ? '60px' : '50px' }} className="flex items-center justify-center">
-                  <span className={`text-xs ${isFullScreen ? 'text-gray-400' : 'text-gray-500'}`}>{isFullScreen ? shade.name : ''}</span>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle>White Saturation Test</CardTitle>
+                <CardDescription>Distinguish light gray squares from the white background. The more you see, the better your monitor's highlight detail.</CardDescription>
+              </CardHeader>
+              <CardContent style={{ backgroundColor: '#FFFFFF' }} className="p-4 md:p-6 flex flex-wrap justify-center items-center gap-1 md:gap-2 rounded-md border">
+                {whiteSaturationShades.map(shade => (
+                  <div key={`white-${shade.name}`} title={`White Level: ${shade.name}`} style={{ backgroundColor: shade.hex, width: isFullScreen ? '60px' : '50px', height: isFullScreen ? '60px' : '50px' }} className="flex items-center justify-center">
+                    <span className={`text-xs ${isFullScreen ? 'text-gray-600' : 'text-gray-500'}`}>{isFullScreen ? shade.name : ''}</span>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
 
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>White Saturation Test</CardTitle>
-              <CardDescription>Distinguish light gray squares from the white background. The more you see, the better your monitor's highlight detail.</CardDescription>
-            </CardHeader>
-            <CardContent style={{ backgroundColor: '#FFFFFF' }} className="p-4 md:p-6 flex flex-wrap justify-center items-center gap-1 md:gap-2 rounded-md border">
-              {whiteSaturationShades.map(shade => (
-                <div key={`white-${shade.name}`} title={`White Level: ${shade.name}`} style={{ backgroundColor: shade.hex, width: isFullScreen ? '60px' : '50px', height: isFullScreen ? '60px' : '50px' }} className="flex items-center justify-center">
-                  <span className={`text-xs ${isFullScreen ? 'text-gray-600' : 'text-gray-500'}`}>{isFullScreen ? shade.name : ''}</span>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-
-          {!isFullScreen && <InfoSection {...contrastTestInfo} />}
+            {!isFullScreen && <InfoSection {...contrastTestInfo} />}
+          </div>
         </div>
-      </div>
-    </MainLayout>
+      </MainLayout>
+    </>
   );
 };
 

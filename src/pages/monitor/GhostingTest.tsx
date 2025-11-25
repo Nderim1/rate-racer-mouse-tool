@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '@/components/SEO';
+import { generateWebPageSchema, generateBreadcrumbSchema } from '@/utils/structuredData';
 import MainLayout from '@/Layout/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -129,84 +130,93 @@ const GhostingTest: React.FC = () => {
     }
   };
 
-  return (
-    <MainLayout
-      title="Ghosting & Motion Blur Test - TestMyRig"
-      headerTitle="Ghosting / Motion Blur Test"
-      headerDescription="Visually assess your monitor's motion performance."
-    >
-      <Helmet>
-        <title>Monitor Ghosting & Motion Blur Test | UFO Test Alternative | TestMyRig</title>
-        <meta name="description" content="Test your monitor for ghosting and motion blur with our animation test. Assess pixel response time and motion clarity. An alternative to UFO tests." />
-        <link rel="canonical" href="https://testmyrig.com/monitor-tools/ghosting-test" />
-        <meta property="og:title" content="Monitor Ghosting & Motion Blur Test | UFO Test Alternative | TestMyRig" />
-        <meta property="og:description" content="Test your monitor for ghosting and motion blur. Assess pixel response time and motion clarity with our animation test." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://testmyrig.com/monitor-tools/ghosting-test" />
-        <meta property="og:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
-        <meta property="og:site_name" content="TestMyRig" />
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      generateWebPageSchema(
+        'Monitor Ghosting & Motion Blur Test | UFO Test Alternative',
+        'Test your monitor for ghosting and motion blur with our animation test. Assess pixel response time and motion clarity. An alternative to UFO tests.',
+        'https://testmyrig.com/monitor-tools/ghosting-test'
+      ),
+      generateBreadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Monitor Tools', url: '/monitor-tools' },
+        { name: 'Ghosting Test', url: '/monitor-tools/ghosting-test' }
+      ])
+    ]
+  };
 
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Monitor Ghosting & Motion Blur Test | UFO Test Alternative | TestMyRig" />
-        <meta name="twitter:description" content="Test your monitor for ghosting and motion blur. Assess pixel response time and motion clarity with our animation test." />
-        <meta name="twitter:image" content="https://testmyrig.com/images/og-monitor-tools.png" /> {/* Using monitor category OG image */}
-      </Helmet>
-      <div ref={fullScreenRef} className={`${isFullScreen ? 'fixed inset-0 z-[100] bg-gray-800' : 'relative'}`}>
-        {isFullScreen && (
-          <div className='absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center p-4' id="animation-container">
-            <div ref={animationAreaRef} className="w-full h-1/2 bg-gray-700 relative overflow-hidden">
-              <div ref={movingObjectRef} style={{ transform: `translateX(${position}px)`, backgroundColor: '#00FF00' }} className="w-16 h-16 absolute top-1/2 -translate-y-1/2"></div>
-            </div>
-            <div className="fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 p-3 bg-black bg-opacity-70 rounded-md shadow-lg">
-              <Button onClick={() => setIsRunning(!isRunning)} variant="outline" size="icon" className="w-10 h-10 border-2 border-white text-white">
-                {isRunning ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
-              </Button>
-              <Slider value={[speed]} onValueChange={(val) => setSpeed(val[0])} min={1} max={20} step={1} className="w-32" />
-              <span className='text-white text-xs min-w-[50px] text-center'>Speed: {speed}</span>
-              <Button onClick={toggleFullScreen} variant="outline" size="icon" className="w-10 h-10 border-2 border-white ml-2" title="Exit Full Screen">
-                <Minimize className="h-5 w-5 text-white" />
-              </Button>
-            </div>
-          </div>
-        )}
-        {!isFullScreen && (
-          <div className="space-y-6 p-1">
-            <Card>
-              <CardHeader>
-                <CardTitle>Animation Controls</CardTitle>
-                <CardDescription>Start the animation and adjust speed to observe motion clarity.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div id="animation-container" className='border rounded-md p-4'>
-                  <div ref={animationAreaRef} className="w-full h-48 bg-gray-200 dark:bg-gray-700 relative overflow-hidden rounded">
-                    <div ref={movingObjectRef} style={{ transform: `translateX(${position}px)`, backgroundColor: '#00DD00' }} className="w-12 h-12 absolute top-1/2 -translate-y-1/2 shadow-lg"></div>
-                  </div>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-4 items-center">
-                  <Button
-                    onClick={() => setIsRunning(!isRunning)}
-                    variant={isRunning ? "destructive" : "default"}
-                    className='min-w-[180px] sm:w-auto'
-                  >
-                    {isRunning ? <Pause className="mr-2 h-4 w-4" /> : <Play className="mr-2 h-4 w-4" />}
-                    {isRunning ? 'Stop Animation' : 'Start Animation'}
-                  </Button>
-                  <div className="flex items-center gap-2 w-full sm:w-auto flex-grow">
-                    <label htmlFor="speedSlider" className="text-sm font-medium whitespace-nowrap">Speed:</label>
-                    <Slider id="speedSlider" value={[speed]} onValueChange={(val) => setSpeed(val[0])} min={1} max={20} step={1} className="w-full" />
-                    <span className="text-sm text-muted-foreground w-8 text-right">{speed}</span>
-                  </div>
-                </div>
-                <Button onClick={toggleFullScreen} className="w-full mt-2">
-                  <Maximize className="mr-2 h-4 w-4" /> Toggle Full Screen View
+  return (
+    <>
+      <SEO
+        title="Monitor Ghosting & Motion Blur Test | UFO Test Alternative"
+        description="Test your monitor for ghosting and motion blur with our animation test. Assess pixel response time and motion clarity. An alternative to UFO tests."
+        canonical="https://testmyrig.com/monitor-tools/ghosting-test"
+        keywords="ghosting test, motion blur test, UFO test, response time test, monitor test"
+        schema={schema}
+      />
+      <MainLayout
+        title="Ghosting & Motion Blur Test - TestMyRig"
+        headerTitle="Ghosting / Motion Blur Test"
+        headerDescription="Visually assess your monitor's motion performance."
+      >
+        <div ref={fullScreenRef} className={`${isFullScreen ? 'fixed inset-0 z-[100] bg-gray-800' : 'relative'}`}>
+          {isFullScreen && (
+            <div className='absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center p-4' id="animation-container">
+              <div ref={animationAreaRef} className="w-full h-1/2 bg-gray-700 relative overflow-hidden">
+                <div ref={movingObjectRef} style={{ transform: `translateX(${position}px)`, backgroundColor: '#00FF00' }} className="w-16 h-16 absolute top-1/2 -translate-y-1/2"></div>
+              </div>
+              <div className="fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 p-3 bg-black bg-opacity-70 rounded-md shadow-lg">
+                <Button onClick={() => setIsRunning(!isRunning)} variant="outline" size="icon" className="w-10 h-10 border-2 border-white text-white">
+                  {isRunning ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
                 </Button>
-              </CardContent>
-            </Card>
-            <InfoSection {...ghostingTestInfo} />
-          </div>
-        )}
-      </div>
-    </MainLayout>
+                <Slider value={[speed]} onValueChange={(val) => setSpeed(val[0])} min={1} max={20} step={1} className="w-32" />
+                <span className='text-white text-xs min-w-[50px] text-center'>Speed: {speed}</span>
+                <Button onClick={toggleFullScreen} variant="outline" size="icon" className="w-10 h-10 border-2 border-white ml-2" title="Exit Full Screen">
+                  <Minimize className="h-5 w-5 text-white" />
+                </Button>
+              </div>
+            </div>
+          )}
+          {!isFullScreen && (
+            <div className="space-y-6 p-1">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Animation Controls</CardTitle>
+                  <CardDescription>Start the animation and adjust speed to observe motion clarity.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div id="animation-container" className='border rounded-md p-4'>
+                    <div ref={animationAreaRef} className="w-full h-48 bg-gray-200 dark:bg-gray-700 relative overflow-hidden rounded">
+                      <div ref={movingObjectRef} style={{ transform: `translateX(${position}px)`, backgroundColor: '#00DD00' }} className="w-12 h-12 absolute top-1/2 -translate-y-1/2 shadow-lg"></div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col sm:flex-row gap-4 items-center">
+                    <Button
+                      onClick={() => setIsRunning(!isRunning)}
+                      variant={isRunning ? "destructive" : "default"}
+                      className='min-w-[180px] sm:w-auto'
+                    >
+                      {isRunning ? <Pause className="mr-2 h-4 w-4" /> : <Play className="mr-2 h-4 w-4" />}
+                      {isRunning ? 'Stop Animation' : 'Start Animation'}
+                    </Button>
+                    <div className="flex items-center gap-2 w-full sm:w-auto flex-grow">
+                      <label htmlFor="speedSlider" className="text-sm font-medium whitespace-nowrap">Speed:</label>
+                      <Slider id="speedSlider" value={[speed]} onValueChange={(val) => setSpeed(val[0])} min={1} max={20} step={1} className="w-full" />
+                      <span className="text-sm text-muted-foreground w-8 text-right">{speed}</span>
+                    </div>
+                  </div>
+                  <Button onClick={toggleFullScreen} className="w-full mt-2">
+                    <Maximize className="mr-2 h-4 w-4" /> Toggle Full Screen View
+                  </Button>
+                </CardContent>
+              </Card>
+              <InfoSection {...ghostingTestInfo} />
+            </div>
+          )}
+        </div>
+      </MainLayout>
+    </>
   );
 };
 

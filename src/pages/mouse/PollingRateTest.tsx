@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '@/components/SEO';
+import { generateWebPageSchema, generateBreadcrumbSchema } from '@/utils/structuredData';
 import TestArea from '@/components/TestArea';
 import DataDisplay from '@/components/DataDisplay';
 import PollingChart from '@/components/PollingChart';
@@ -11,6 +12,8 @@ import { AppSidebar } from '@/components/AppSidebar';
 import { SidebarProvider, SidebarInset, SidebarRail, SidebarTrigger } from "@/components/ui/sidebar";
 import { Target, Gauge, Timer, Maximize, ZoomIn, CheckSquare, ChevronsRightLeft, Scroll, Waves, Navigation } from 'lucide-react';
 import MainLayout from '@/Layout/MainLayout';
+import { RelatedTools } from '@/components/RelatedTools';
+import { mouseToolItems } from '@/toolMenuItems';
 
 const Index = () => {
   const { toast } = useToast();
@@ -73,69 +76,82 @@ const Index = () => {
     }
   };
 
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      generateWebPageSchema(
+        'Mouse Polling Rate Test - Check Your Mouse Hz',
+        'Test your mouse\'s polling rate (Hz) accurately. See real-time, average, and max polling rate. Understand what polling rate means for gaming and general use.',
+        'https://testmyrig.com/mouse-tools/polling-rate-test'
+      ),
+      generateBreadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Mouse Tools', url: '/mouse-tools' },
+        { name: 'Polling Rate Test', url: '/mouse-tools/polling-rate-test' }
+      ])
+    ]
+  };
+
+  const relatedTools = mouseToolItems.filter(tool => tool.path !== '/mouse-tools/polling-rate-test');
+
   return (
-    <MainLayout headerTitle="Mouse Polling Rate Tester" headerDescription="Measure how many times per second your mouse reports its position to your computer">
-      <Helmet>
-        <title>Mouse Polling Rate Test - Check Your Mouse Hz | TestMyRig</title>
-        <meta name="description" content="Test your mouse's polling rate (Hz) accurately. See real-time, average, and max polling rate. Understand what polling rate means for gaming and general use." />
-        <link rel="canonical" href="https://testmyrig.com/mouse-tools/polling-rate-test" />
-        <meta property="og:title" content="Mouse Polling Rate Test - Check Your Mouse Hz | TestMyRig" />
-        <meta property="og:description" content="Test your mouse's polling rate (Hz) accurately. See real-time, average, and max polling rate." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://testmyrig.com/mouse-tools/polling-rate-test" />
-        <meta property="og:image" content="https://testmyrig.com/images/og-mouse-tools.png" /> {/* Re-using category OG image for now */}
-        <meta property="og:site_name" content="TestMyRig" />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Mouse Polling Rate Test - Check Your Mouse Hz | TestMyRig" />
-        <meta name="twitter:description" content="Test your mouse's polling rate (Hz) accurately. See real-time, average, and max polling rate." />
-        <meta name="twitter:image" content="https://testmyrig.com/images/og-mouse-tools.png" /> {/* Re-using category OG image for now */}
-      </Helmet>
-      {/* Testing Area */}
-      <div className="mb-6">
-        {isTouchDevice ? (
-          <div className="test-area p-6 flex items-center justify-center">
-            <div className="text-center">
-              <h2 className="text-xl font-semibold mb-2">Touch Device Detected</h2>
-              <p className="text-muted-foreground">
-                Mouse polling rate testing requires a physical mouse.
-                This tool may not function correctly on touch-only devices.
-              </p>
+    <>
+      <SEO
+        title="Mouse Polling Rate Test - Check Your Mouse Hz"
+        description="Test your mouse's polling rate (Hz) accurately. See real-time, average, and max polling rate. Understand what polling rate means for gaming and general use."
+        canonical="https://testmyrig.com/mouse-tools/polling-rate-test"
+        keywords="mouse polling rate, Hz test, mouse test, gaming mouse, polling rate test"
+        schema={schema}
+      />
+      <MainLayout headerTitle="Mouse Polling Rate Tester" headerDescription="Measure how many times per second your mouse reports its position to your computer">
+        {/* Testing Area */}
+        <div className="mb-6">
+          {isTouchDevice ? (
+            <div className="test-area p-6 flex items-center justify-center">
+              <div className="text-center">
+                <h2 className="text-xl font-semibold mb-2">Touch Device Detected</h2>
+                <p className="text-muted-foreground">
+                  Mouse polling rate testing requires a physical mouse.
+                  This tool may not function correctly on touch-only devices.
+                </p>
+              </div>
             </div>
-          </div>
-        ) : (
-          <TestArea
+          ) : (
+            <TestArea
+              isActive={isActive}
+              onMouseMove={handleMouseMove}
+            />
+          )}
+        </div>
+
+        {/* Data Display */}
+        <div className="mb-6">
+          <DataDisplay
+            current={current}
+            average={average}
+            max={max}
             isActive={isActive}
-            onMouseMove={handleMouseMove}
+            onReset={resetTest}
+            onToggle={toggleTest}
           />
-        )}
-      </div>
+        </div>
 
-      {/* Data Display */}
-      <div className="mb-6">
-        <DataDisplay
-          current={current}
-          average={average}
-          max={max}
-          isActive={isActive}
-          onReset={resetTest}
-          onToggle={toggleTest}
-        />
-      </div>
+        {/* Chart */}
+        <div className="mb-6">
+          <PollingChart data={chartData} maxRate={max} />
+        </div>
 
-      {/* Chart */}
-      <div className="mb-6">
-        <PollingChart data={chartData} maxRate={max} />
-      </div>
+        <Separator className="my-8" />
 
-      <Separator className="my-8" />
+        {/* Info Section */}
+        <section className="mb-8">
+          <h2 className="text-2xl font-bold mb-6">Understanding Mouse Polling Rate</h2>
+          <InfoSection {...pollingRateInfoData} />
+        </section>
 
-      {/* Info Section */}
-      <section className="mb-8">
-        <h2 className="text-2xl font-bold mb-6">Understanding Mouse Polling Rate</h2>
-        <InfoSection {...pollingRateInfoData} />
-      </section>
-    </MainLayout>
+        <RelatedTools tools={relatedTools} />
+      </MainLayout>
+    </>
   );
 };
 

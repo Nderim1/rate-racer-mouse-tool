@@ -1,5 +1,6 @@
 import { AppSidebar } from '@/components/AppSidebar';
 import { SidebarProvider, SidebarRail, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+import { Breadcrumbs } from '@/components/Breadcrumbs';
 import React, { useEffect } from 'react';
 
 interface MainLayoutProps {
@@ -58,6 +59,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
       <main className="container mx-auto">
         <div className="flex flex-col lg:flex-row gap-6">
           <div className={showAds ? "flex-1" : "w-full"}>
+            <Breadcrumbs />
             {children}
           </div>
           {showAds && (
