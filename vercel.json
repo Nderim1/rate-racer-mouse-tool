@@ -7,6 +7,10 @@
     {
       "source": "/blog/:path*",
       "destination": "/blog/:path*"
+    },
+    {
+      "source": "/((?!blog).*)",
+      "destination": "/index.html"
     }
   ],
   "cleanUrls": true

@@ -13,8 +13,22 @@ const { title, description } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title} | TestMyRig Blog</title>
-    {description && <meta name="description" content={description} />}
+    <meta name="description" content={description || "Latest posts from TestMyRig - insights, guides, and news about gaming peripherals and testing"} />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content={`${title} | TestMyRig Blog`} />
+    <meta property="og:description" content={description || "Latest posts from TestMyRig - insights, guides, and news about gaming peripherals and testing"} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={`https://testmyrig.com/blog${Astro.url.pathname === '/blog' ? '' : Astro.url.pathname.replace('/blog', '')}`} />
+    <meta property="og:site_name" content="TestMyRig Blog" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={`${title} | TestMyRig Blog`} />
+    <meta name="twitter:description" content={description || "Latest posts from TestMyRig - insights, guides, and news about gaming peripherals and testing"} />
+    
     <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="canonical" href={`https://testmyrig.com/blog${Astro.url.pathname === '/blog' ? '' : Astro.url.pathname.replace('/blog', '')}`} />
     <style>
       :root {
         /* Light Retro Minimalist Theme - Matching Main App */
