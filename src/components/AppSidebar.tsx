@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Mouse, Menu, HelpCircle } from 'lucide-react';
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Mouse, Menu, HelpCircle } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -15,20 +15,39 @@ import {
   SidebarFooter,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { MenuItem, mouseToolItems, keyboardToolItems, monitorToolItems, utilityItems } from '@/toolMenuItems';
+import {
+  MenuItem,
+  mouseToolItems,
+  keyboardToolItems,
+  monitorToolItems,
+  utilityItems,
+} from "@/toolMenuItems";
 
 const renderMenuGroup = (items: MenuItem[], locationPathname: string) => (
   <SidebarMenu>
-    {items.map((item) => (
-      <SidebarMenuItem key={item.title} tooltip={item.description}>
-        <SidebarMenuButton asChild isActive={item.path === locationPathname}>
-          <Link to={item.path}>
-            <item.icon className="h-5 w-5" />
-            <span>{item.title}</span>
-          </Link>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
-    ))}
+    {items.map((item) => {
+      // Check if this is an external path (like /blog which is served by Astro)
+      const isExternal =
+        item.path === "/blog" || item.path.startsWith("/blog/");
+
+      return (
+        <SidebarMenuItem key={item.title} tooltip={item.description}>
+          <SidebarMenuButton asChild isActive={item.path === locationPathname}>
+            {isExternal ? (
+              <a href={item.path}>
+                <item.icon className="h-5 w-5" />
+                <span>{item.title}</span>
+              </a>
+            ) : (
+              <Link to={item.path}>
+                <item.icon className="h-5 w-5" />
+                <span>{item.title}</span>
+              </Link>
+            )}
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      );
+    })}
   </SidebarMenu>
 );
 
@@ -40,7 +59,9 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader className="flex items-center justify-between py-4">
         <div className="flex items-center px-4">
-          <Mouse className={`h-6 w-6 text-primary ${open ? ' mr-2' : ' mr-0'}`} />
+          <Mouse
+            className={`h-6 w-6 text-primary ${open ? " mr-2" : " mr-0"}`}
+          />
           {open && <span className="text-lg font-bold">TestMyRig</span>}
         </div>
       </SidebarHeader>
@@ -72,7 +93,10 @@ export function AppSidebar() {
         {/* Monitor Tools Section */}
         <SidebarGroup>
           <SidebarGroupLabel>
-            <Link to="/monitor-tools/dead-pixel-test" className="hover:underline">
+            <Link
+              to="/monitor-tools/dead-pixel-test"
+              className="hover:underline"
+            >
               Monitor Tools
             </Link>
           </SidebarGroupLabel>
@@ -83,9 +107,7 @@ export function AppSidebar() {
 
         {/* Utility Section */}
         <SidebarGroup>
-          <SidebarGroupLabel>
-            Resources
-          </SidebarGroupLabel>
+          <SidebarGroupLabel>Resources</SidebarGroupLabel>
           <SidebarGroupContent>
             {renderMenuGroup(utilityItems, location.pathname)}
           </SidebarGroupContent>
