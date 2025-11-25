@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && cd blog && npm install && npm run build && cd .. && mkdir -p dist/blog && cp -R blog/dist/* dist/blog/",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
