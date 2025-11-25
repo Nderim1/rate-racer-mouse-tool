@@ -31,7 +31,7 @@ export const mouseToolItems: MenuItem[] = [
     path: '/mouse-tools/input-lag',
     icon: Timer,
     description: 'Measure mouse input latency (requires external hardware).'
-  }, 
+  },
   // {
   //   title: 'Sensor Precision Test',
   //   path: '/mouse-tools/sensor-precision',
@@ -71,37 +71,37 @@ export const monitorToolItems: MenuItem[] = [
   {
     title: "Screen Uniformity Test",
     path: "/monitor-tools/screen-uniformity-test",
-    icon: MonitorPlay, 
+    icon: MonitorPlay,
     description: "Check screen color & brightness consistency."
   },
   {
     title: "Color Banding Test",
     path: "/monitor-tools/color-banding-test",
-    icon: MonitorPlay, 
+    icon: MonitorPlay,
     description: "Test for smooth color gradients."
   },
   {
     title: "Sharpness & Text Test",
     path: "/monitor-tools/sharpness-text-test",
-    icon: MonitorPlay, 
+    icon: MonitorPlay,
     description: "Assess text clarity and sharpness."
   },
   {
     title: "Ghosting / Motion Blur Test",
     path: "/monitor-tools/ghosting-test",
-    icon: MonitorPlay, 
+    icon: MonitorPlay,
     description: "Visually test motion performance."
   },
   {
     title: "Contrast Ratio Test",
     path: "/monitor-tools/contrast-test",
-    icon: MonitorPlay, 
+    icon: MonitorPlay,
     description: "Assess black/white level distinction."
   },
   {
     title: "Input Lag Test (Helper)",
     path: "/monitor-tools/input-lag-test-helper",
-    icon: MonitorPlay, 
+    icon: MonitorPlay,
     description: "Visual aid for input lag estimation."
   }
 ];
@@ -136,5 +136,11 @@ export const utilityItems: MenuItem[] = [
     path: '/recommended-mice',
     icon: Award,
     description: 'Check out our top mouse picks for various needs.'
+  },
+  {
+    title: 'Blog',
+    path: '/blog',
+    icon: BookOpen,
+    description: 'Read our latest articles and guides.'
   }
 ];
