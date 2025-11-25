@@ -6,48 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && cd blog && npm install && npm run build && cd .. && mkdir -p dist/blog && cp -R blog/dist/* dist/blog/",
-    "postbuild": "react-snap",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
     "blog:dev": "cd blog && npm run dev",
     "blog:build": "cd blog && npm run build",
     "blog:preview": "cd blog && npm run preview"
-  },
-  "reactSnap": {
-    "source": "dist",
-    "minifyHtml": {
-      "collapseWhitespace": false,
-      "removeComments": false
-    },
-    "puppeteerArgs": [
-      "--no-sandbox",
-      "--disable-setuid-sandbox"
-    ],
-    "include": [
-      "/",
-      "/mouse-tools",
-      "/keyboard-tools",
-      "/monitor-tools",
-      "/mouse-tools/polling-rate-test",
-      "/mouse-tools/click-speed",
-      "/mouse-tools/dpi-analyzer",
-      "/mouse-tools/input-lag",
-      "/keyboard-tools/typing-speed",
-      "/keyboard-tools/key-rollover",
-      "/keyboard-tools/keyboard-tester",
-      "/monitor-tools/dead-pixel-test",
-      "/monitor-tools/screen-uniformity-test",
-      "/monitor-tools/color-banding-test",
-      "/monitor-tools/sharpness-text-test",
-      "/monitor-tools/ghosting-test",
-      "/monitor-tools/contrast-test",
-      "/monitor-tools/input-lag-test-helper",
-      "/mouse-guide",
-      "/keyboard-guide",
-      "/monitor-guide",
-      "/recommended-mice"
-    ]
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -114,7 +78,6 @@
     "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^15.9.0",
     "postcss": "^8.4.47",
-    "react-snap": "^1.23.0",
     "tailwindcss": "^3.4.11",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
