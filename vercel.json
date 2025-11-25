@@ -1,17 +1,12 @@
 {
   "rewrites": [
     {
-      "source": "/blog",
-      "destination": "/blog/index.html"
-    },
-    {
       "source": "/blog/:path*",
       "destination": "/blog/:path*"
     },
     {
-      "source": "/((?!blog).*)",
+      "source": "/((?!blog|assets|favicon).*)",
       "destination": "/index.html"
     }
-  ],
-  "cleanUrls": true
+  ]
 }
