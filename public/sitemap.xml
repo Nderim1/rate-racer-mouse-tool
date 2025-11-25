@@ -139,11 +139,42 @@
     <priority>0.7</priority>
   </url>
   -->
+  <!-- Blog Pages -->
   <url>
     <loc>https://testmyrig.com/blog</loc>
     <lastmod>2025-11-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://testmyrig.com/blog/welcome</loc>
+    <lastmod>2025-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://testmyrig.com/blog/dpi-vs-edpi-guide</loc>
+    <lastmod>2025-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://testmyrig.com/blog/mouse-polling-rate-explained</loc>
+    <lastmod>2025-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://testmyrig.com/blog/how-to-improve-cps</loc>
+    <lastmod>2025-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://testmyrig.com/blog/monitor-ghosting-vs-motion-blur</loc>
+    <lastmod>2025-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://testmyrig.com/blog/what-is-nkro-keyboard</loc>
